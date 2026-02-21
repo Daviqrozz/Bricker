@@ -134,3 +134,58 @@ p, span, h1, h2, h3, h4, h5, h6 {
     color: var(--accent-blue);
     cursor: pointer;
 }
+
+/* Mobile Card View Styles */
+.bg-card-custom {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-card);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bg-card-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.bg-card-custom .card-title a:hover {
+    color: var(--accent-blue) !important;
+}
+
+/* Ensure proper spacing on mobile */
+@media (max-width: 767.98px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* View Toggle Buttons */
+.btn-group .btn.active {
+    background-color: var(--accent-blue) !important;
+    border-color: var(--accent-blue) !important;
+    color: white !important;
+}
+
+.btn-outline-secondary {
+    color: var(--text-secondary);
+    border-color: var(--border-card);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--bg-card);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+/* Responsive Card Grid for Desktop */
+@media (min-width: 768px) {
+    #cards-view .row {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1rem;
+    }
+    
+    #cards-view .col-12 {
+        width: 100%;
+    }
+}

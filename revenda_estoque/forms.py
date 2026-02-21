@@ -3,12 +3,14 @@ from django import forms
 
 class CustomLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control form-control-lg bg-light border-0', 
+        'class': 'form-control',
         'placeholder': 'Nome de usuário',
-        'id': 'floatingInput'
+        'id': 'floatingInput',
+        'autocomplete': 'username'
     }))
     password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control form-control-lg bg-light border-0',
+        'class': 'form-control',
         'placeholder': 'Senha',
-        'id': 'floatingPassword'
+        'id': 'floatingPassword',
+        'autocomplete': 'current-password'
     }))

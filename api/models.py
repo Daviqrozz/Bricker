@@ -70,7 +70,7 @@ class Product(models.Model):
             return self.sale_value - self.cost
     
     def __str__(self):
-        return f"{self.name} | Estoque: {self.quantity_in_stock}"
+        return f"{self.name} | Estoque: {self.quantity_in_stock}" 
 
 class Sale(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sales')

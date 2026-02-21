@@ -11,7 +11,7 @@
     <div class="col-md-4">
         <div
             class="card-dark shadow-soft p-4 d-flex flex-column align-items-center justify-content-center h-100 text-center">
-            <h5 class="text-secondary mb-2 fw-bold">Saldo (Últimos 30 dias)</h5>
+            <h5 class="text-secondary mb-2 fw-bold">Lucro ({{ period_label }})</h5>
             <h2 class="fw-bold mb-0 {% if last_month_balance >= 0 %}text-success{% else %}text-danger{% endif %}">
                 R$ {{ last_month_balance|floatformat:2 }}
             </h2>
@@ -19,23 +19,23 @@
         </div>
     </div>
 
-    <!-- New Products Card -->
+    <!-- Total Spent Card -->
     <div class="col-md-4">
         <div
             class="card-dark shadow-soft p-4 d-flex flex-column align-items-center justify-content-center h-100 text-center">
-            <h5 class="text-secondary mb-2 fw-bold">Novos Produtos</h5>
-            <h2 class="fw-bold mb-0 text-info">{{ new_products_count }}</h2>
-            <small style="color: white;" class="mt-2">Adicionados nos últimos 30 dias</small>
+            <h5 class="text-secondary mb-2 fw-bold">Investimento Total</h5>
+            <h2 class="fw-bold mb-0 text-info">R$ {{ total_spent|floatformat:2 }}</h2>
+            <small style="color: white;" class="mt-2">Soma de compras ({{ period_label }})</small>
         </div>
     </div>
 
-    <!-- Stock Card -->
+    <!-- Gross Income Card -->
     <div class="col-md-4">
         <div
             class="card-dark shadow-soft p-4 d-flex flex-column align-items-center justify-content-center h-100 text-center">
-            <h5 class="text-secondary mb-2 fw-bold">Em Estoque</h5>
-            <h2 class="fw-bold mb-0 text-warning">{{ stock_count }}</h2>
-            <small style="color: white;" class="mt-2">Total de itens disponíveis</small>
+            <h5 class="text-secondary mb-2 fw-bold">Renda Bruta</h5>
+            <h2 class="fw-bold mb-0 text-warning">R$ {{ gross_income|floatformat:2 }}</h2>
+            <small style="color: white;" class="mt-2">Total (Lucro + Investido)</small>
         </div>
     </div>
 </div>
@@ -47,9 +47,45 @@
         <a href="{% url 'create_view' %}" class="btn btn-success">
             <i class="bi bi-plus-lg"></i> Cadastrar
         </a>
+
+        <div class="d-flex gap-2 align-items-center">
+            <!-- Products Per Page Selector -->
+            <div class="d-flex align-items-center gap-2">
+                <label for="per-page-select" class="text-secondary mb-0 small">Itens por página:</label>
+                <select id="per-page-select" class="form-select form-select-sm" style="width: auto;">
+                    <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+                    <option value="25" {% if per_page == 25 %}selected{% endif %}>25</option>
+                    <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+                    <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+                </select>
+            </div>
+
+            <!-- Date Period Selector -->
+            <div class="d-flex align-items-center gap-2">
+                <label for="period-select" class="text-secondary mb-0 small">Período:</label>
+                <select id="period-select" class="form-select form-select-sm" style="width: auto;">
+                    <option value="30" {% if period == '30' %}selected{% endif %}>30 dias</option>
+                    <option value="90" {% if period == '90' %}selected{% endif %}>3 meses</option>
+                    <option value="180" {% if period == '180' %}selected{% endif %}>6 meses</option>
+                    <option value="365" {% if period == '365' %}selected{% endif %}>1 ano</option>
+                    <option value="all" {% if period == 'all' %}selected{% endif %}>Tudo</option>
+                </select>
+            </div>
+
+            <!-- View Toggle Buttons (Desktop Only) -->
+            <div class="btn-group d-none d-md-flex" role="group" aria-label="View toggle">
+                <button type="button" class="btn btn-outline-secondary" id="view-table-btn">
+                    <i class="bi bi-table"></i> Tabela
+                </button>
+                <button type="button" class="btn btn-outline-secondary" id="view-cards-btn">
+                    <i class="bi bi-grid-3x3-gap"></i> Cards
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div class="table-responsive">
+    <!-- Table View (Desktop) -->
+    <div class="table-responsive desktop-table-view" id="table-view">
         <table class="table table-dark-custom table-hover text-center bg-transparent table-striped table-custom-border">
             <thead>
                 <tr>
@@ -74,9 +110,10 @@
                     <td>{{product.quantity_total}}</td>
                     <td>{{product.quantity_sold}}</td>
                     <td>
-                        {{product.quantity_in_stock}}
                         {% if product.is_sold_out %}
-                        <span class="badge bg-danger ms-1">Esgotado</span>
+                        <span class="badge bg-danger">Esgotado</span>
+                        {% else %}
+                        {{ product.quantity_in_stock }}
                         {% endif %}
                     </td>
                     <td>R$ {{product.cost|floatformat:2}}</td>
@@ -111,9 +148,31 @@
                 <script>
                     document.addEventListener('DOMContentLoaded', (event) => {
 
+                        // Apply colors to table profit cells
                         const profit_cells = document.getElementsByClassName('profit-cell');
 
                         Array.from(profit_cells).forEach(sale_value_element => {
+
+                            const raw_value = sale_value_element.textContent;
+
+                            const cleaned_value = raw_value.replace(/[^\d,\-]/g, '').replace(',', '.');
+
+                            const sale_value = parseFloat(cleaned_value);
+
+                            if (!isNaN(sale_value)) {
+                                if (sale_value > 0) {
+                                    sale_value_element.style.color = '#22C55E';
+                                } else if (sale_value < 0) {
+                                    sale_value_element.style.color = 'red';
+                                } else
+                                    sale_value_element.style.color = 'yellow';
+                            }
+                        });
+
+                        // Apply colors to mobile card profit cells
+                        const profit_cells_mobile = document.getElementsByClassName('profit-cell-mobile');
+
+                        Array.from(profit_cells_mobile).forEach(sale_value_element => {
 
                             const raw_value = sale_value_element.textContent;
 
@@ -136,13 +195,102 @@
         </table>
     </div>
 
+    <!-- Card View (Mobile + Desktop Toggle) -->
+    <div class="desktop-cards-view" id="cards-view">
+        <div class="row g-4">
+            {% for product in products_list %}
+            <div class="col-12 col-md-4">
+                <div class="card bg-card-custom shadow"
+                    style="border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;">
+                    <div class="card-body">
+                        <!-- Header with name and delete button -->
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-1">
+                                    <a href="{% url 'edit_view' product.id %}" class="text-white text-decoration-none">
+                                        {{ product.name }}
+                                    </a>
+                                </h5>
+                                <p class="text-secondary mb-0 small">
+                                    <i class="bi bi-tag"></i> {{ product.category }}
+                                </p>
+                            </div>
+                            <form action="{% url 'delete_view' product.id %}" method="POST" class="ms-2"
+                                onsubmit="return confirm('Tem certeza que deseja excluir este item? Esta ação é irreversível.');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-link text-danger p-0">
+                                    <i class="bi bi-trash delete-icon fs-5"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Stock Information -->
+                        <div class="d-flex gap-2 mb-3">
+                            <div class="flex-fill text-center p-2 bg-dark rounded">
+                                <small class="text-secondary d-block">Total</small>
+                                <strong class="text-info">{{ product.quantity_total }}</strong>
+                            </div>
+                            <div class="flex-fill text-center p-2 bg-dark rounded">
+                                <small class="text-secondary d-block">Vendido</small>
+                                <strong class="text-warning">{{ product.quantity_sold }}</strong>
+                            </div>
+                            <div class="flex-fill text-center p-2 bg-dark rounded">
+                                <small class="text-secondary d-block">Estoque</small>
+                                <strong
+                                    class="{% if product.is_sold_out %}text-danger{% else %}text-success{% endif %}">
+                                    {{ product.quantity_in_stock }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <!-- Price Information -->
+                        <div class="border-top border-secondary pt-3 mb-3">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <small class="text-secondary d-block">Custo Unitário</small>
+                                    <strong class="text-white">R$ {{ product.cost|floatformat:2 }}</strong>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-secondary d-block">Preço Médio Venda</small>
+                                    <strong class="text-white">R$ {{ product.average_sale_price|floatformat:2}}</strong>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-secondary d-block">Lucro Total</small>
+                                <strong class="profit-cell-mobile fs-5">R$
+                                    {{product.total_profit|floatformat:2}}</strong>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2">
+                            {% if not product.is_sold_out %}
+                            <a href="{% url 'sell_product_view' product.id %}"
+                                class="btn btn-success btn-sm flex-grow-1">
+                                <i class="bi bi-cart-plus"></i> Vender
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'edit_view' product.id %}"
+                                class="btn btn-secondary btn-sm {% if not product.is_sold_out %}flex-grow-1{% else %}w-100{% endif %}">
+                                <i class="bi bi-pen"></i> Editar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
     <!-- Pagination Controls -->
     {% if products_list.has_other_pages %}
     <nav aria-label="Page navigation" class="mt-4">
         <ul class="pagination justify-content-center">
             {% if products_list.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ products_list.previous_page_number }}" aria-label="Previous">
+                <a class="page-link"
+                    href="?page={{ products_list.previous_page_number }}&per_page={{ per_page }}&period={{ period }}"
+                    aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -157,7 +305,7 @@
             <li class="page-item active"><span class="page-link">{{ i }}</span></li>
             {% else %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ i }}">
+                <a class="page-link" href="?page={{ i }}&per_page={{ per_page }}&period={{ period }}">
                     {{ i }}
                 </a>
             </li>
@@ -166,7 +314,9 @@
 
             {% if products_list.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ products_list.next_page_number }}" aria-label="Next">
+                <a class="page-link"
+                    href="?page={{ products_list.next_page_number }}&per_page={{ per_page }}&period={{ period }}"
+                    aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
@@ -180,5 +330,98 @@
     {% endif %}
 
 </div>
+
+<script>
+    // View Toggle Functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        const tableView = document.getElementById('table-view');
+        const cardsView = document.getElementById('cards-view');
+        const tableBtn = document.getElementById('view-table-btn');
+        const cardsBtn = document.getElementById('view-cards-btn');
+        const perPageSelect = document.getElementById('per-page-select');
+
+        // Handle per-page selector change
+        if (perPageSelect) {
+            perPageSelect.addEventListener('change', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('per_page', this.value);
+                urlParams.set('page', '1'); // Reset to first page when changing per_page
+                window.location.search = urlParams.toString();
+            });
+        }
+
+        // Handle period selector change
+        const periodSelect = document.getElementById('period-select');
+        if (periodSelect) {
+            periodSelect.addEventListener('change', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('period', this.value);
+                window.location.search = urlParams.toString();
+            });
+        }
+
+        // Check if we're on mobile
+        const isMobile = window.innerWidth < 768;
+
+        if (!isMobile) {
+            // Desktop: Handle toggle
+            const savedView = localStorage.getItem('productView') || 'table';
+
+            function showTableView() {
+                tableView.style.display = 'block';
+                cardsView.style.display = 'none';
+                tableBtn.classList.add('active');
+                cardsBtn.classList.remove('active');
+                localStorage.setItem('productView', 'table');
+            }
+
+            function showCardsView() {
+                tableView.style.display = 'none';
+                cardsView.style.display = 'block';
+                tableBtn.classList.remove('active');
+                cardsBtn.classList.add('active');
+                localStorage.setItem('productView', 'cards');
+            }
+
+            // Set initial view
+            if (savedView === 'cards') {
+                showCardsView();
+            } else {
+                showTableView();
+            }
+
+            // Button click handlers
+            tableBtn.addEventListener('click', showTableView);
+            cardsBtn.addEventListener('click', showCardsView);
+        } else {
+            // Mobile: Always show cards
+            tableView.style.display = 'none';
+            cardsView.style.display = 'block';
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            const nowMobile = window.innerWidth < 768;
+            if (nowMobile) {
+                tableView.style.display = 'none';
+                cardsView.style.display = 'block';
+            } else {
+                // Restore saved preference on desktop
+                const savedView = localStorage.getItem('productView') || 'table';
+                if (savedView === 'cards') {
+                    tableView.style.display = 'none';
+                    cardsView.style.display = 'block';
+                    cardsBtn.classList.add('active');
+                    tableBtn.classList.remove('active');
+                } else {
+                    tableView.style.display = 'block';
+                    cardsView.style.display = 'none';
+                    tableBtn.classList.add('active');
+                    cardsBtn.classList.remove('active');
+                }
+            }
+        });
+    });
+</script>
 
 {% endblock %}

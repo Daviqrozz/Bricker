@@ -1,77 +1,180 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Login - Revenda Estoque{% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center vh-100" style="margin-top: -50px;">
-    <div class="card shadow-lg border-0 rounded-4" style="max-width: 400px; width: 100%; overflow: hidden;">
-        <div class="card-header bg-primary text-white text-center py-4 border-0">
-            <h3 class="fw-bold mb-0"><i class="bi bi-box-seam me-2"></i>Revenda Estoque</h3>
-            <p class="small mb-0 text-white-50">Bem-vindo de volta!</p>
-        </div>
-        <div class="card-body p-4 p-md-5 bg-white">
-            <h4 class="text-center text-secondary mb-4 fw-bold">Login</h4>
-            
-            {% if form.errors %}
-                <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    <div class="small">
-                        Credenciais inválidas. Tente novamente.
-                    </div>
-                </div>
-            {% endif %}
+<div class="login-wrapper d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 80px);">
+    <div class="login-card card-dark shadow-soft">
 
-            <form method="post" class="needs-validation" novalidate>
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ next }}">
-                
-                <div class="mb-4">
-                    <label for="{{ form.username.id_for_label }}" class="form-label text-muted small fw-bold">USUÁRIO</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-0 text-primary"><i class="bi bi-person-fill"></i></span>
-                        {{ form.username }}
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label for="{{ form.password.id_for_label }}" class="form-label text-muted small fw-bold">SENHA</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-0 text-primary"><i class="bi bi-lock-fill"></i></span>
-                        {{ form.password }}
-                    </div>
-                </div>
-
-                <div class="d-grid gap-2 mt-5">
-                    <button type="submit" class="btn btn-primary btn-lg shadow-sm fw-bold rounded-pill">
-                        ENTRAR <i class="bi bi-arrow-right-short ms-1"></i>
-                    </button>
-                </div>
-            </form>
-
-            <div class="text-center mt-4 pt-3 border-top">
-                <a href="{% url 'password_reset' %}" class="text-decoration-none small text-muted hover-link">
-                    Esqueceu sua senha?
-                </a>
+        <!-- Header with logo -->
+        <div class="login-header text-center mb-4">
+            <div class="login-icon mb-3">
+                <i class="bi bi-box-seam-fill"></i>
             </div>
+            <h3 class="fw-bold mb-1">RevendaEstoque</h3>
+            <p class="mb-0" style="color: var(--text-secondary); font-size: 0.875rem;">
+                Acesse o painel de controle
+            </p>
+        </div>
+
+        <!-- Error Alert -->
+        {% if form.errors %}
+        <div class="alert-dark-error d-flex align-items-center gap-2 mb-4 p-3 rounded-3">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0" style="color: var(--accent-red);"></i>
+            <span style="font-size: 0.875rem;">Usuário ou senha inválidos. Tente novamente.</span>
+        </div>
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <div class="mb-3">
+                <label for="{{ form.username.id_for_label }}" class="form-label-dark">
+                    <i class="bi bi-person-fill me-1"></i> Usuário
+                </label>
+                <div class="input-wrapper">
+                    {{ form.username }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.password.id_for_label }}" class="form-label-dark">
+                    <i class="bi bi-lock-fill me-1"></i> Senha
+                </label>
+                <div class="input-wrapper">
+                    {{ form.password }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-semibold py-2 rounded-3 login-btn">
+                <i class="bi bi-arrow-right-circle-fill me-2"></i>Entrar
+            </button>
+        </form>
+
+        <!-- Footer link -->
+        <div class="text-center mt-4 pt-3" style="border-top: 1px solid var(--border-card);">
+            <a href="{% url 'password_reset' %}" class="forgot-link">
+                Esqueceu sua senha?
+            </a>
         </div>
     </div>
 </div>
 
 <style>
-    /* Custom CSS for Login Page overrides */
+    /* Override body background to ensure it's the dark color from custom.css */
     body {
-        background-color: #f8f9fa; /* Light grey background for contrast */
+        background-color: var(--bg-main) !important;
     }
-    .hover-link:hover {
-        color: var(--bs-primary) !important;
-        text-decoration: underline !important;
+
+    .login-wrapper {
+        padding: 2rem 1rem;
     }
-    .form-control:focus {
-        box-shadow: none;
-        background-color: #fff;
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        padding: 2.5rem;
+        border-radius: 16px;
+        animation: fadeSlideIn 0.4s ease-out forwards;
     }
-    .input-group-text {
-        font-size: 1.2rem;
+
+    @keyframes fadeSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
+    }
+
+    .login-icon i {
+        font-size: 1.75rem;
+        color: #fff !important;
+    }
+
+    .form-label-dark {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    /* Restyle form-control to look like the dashboard inputs */
+    .login-card .form-control {
+        background-color: var(--bg-main) !important;
+        border: 1px solid var(--border-card) !important;
+        color: var(--text-primary) !important;
+        border-radius: 8px !important;
+        padding: 0.65rem 0.9rem;
+        font-size: 0.95rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .login-card .form-control:focus {
+        border-color: var(--accent-blue) !important;
+        box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.2) !important;
+        background-color: var(--bg-main) !important;
+        color: var(--text-primary) !important;
+        outline: none;
+    }
+
+    .login-card .form-control::placeholder {
+        color: #4B5563;
+    }
+
+    .alert-dark-error {
+        background-color: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: var(--text-primary);
+    }
+
+    .login-btn {
+        font-size: 0.95rem;
+        letter-spacing: 0.02em;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+    }
+
+    .login-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45);
+    }
+
+    .login-btn:active {
+        transform: translateY(0);
+    }
+
+    .forgot-link {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .forgot-link:hover {
+        color: var(--accent-blue);
     }
 </style>
 {% endblock %}

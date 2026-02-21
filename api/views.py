@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404,redirect
 from .models import Product, Category, Sale
 from .forms import ProductForm, CategoryForm, SaleForm
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, F
 from django.utils import timezone
 from datetime import timedelta
 
@@ -11,18 +11,50 @@ def product_view(request):
     
     products = Product.objects.all()
     
-    thirty_days_ago = timezone.now() - timedelta(days=30)
-
-    recent_products = Product.objects.filter(cadastred_date__gte=thirty_days_ago)
+    # Date Filtering
+    period = request.GET.get('period', '30')
+    period_label = "Últimos 30 dias"
     
-    new_products_count = recent_products.count()
+    start_date = None
+    if period == 'all':
+        period_label = "Todo o período"
+    else:
+        try:
+            days = int(period)
+            start_date = timezone.now() - timedelta(days=days)
+            if days == 90:
+                period_label = "Últimos 3 meses"
+            elif days == 180:
+                period_label = "Últimos 6 meses"
+            elif days == 365:
+                period_label = "Último ano"
+            else:
+                period_label = f"Últimos {days} dias"
+        except ValueError:
+            # Default to 30 days if invalid
+            start_date = timezone.now() - timedelta(days=30)
+            period = '30'
 
-    # Calculate balance from Sale records in the last 30 days
-    recent_sales = Sale.objects.filter(created_at__gte=thirty_days_ago)
+    # Recent Sales Filtering
+    if start_date:
+        recent_sales = Sale.objects.filter(created_at__gte=start_date)
+        # For investment, we might still want total investment OR investment in period. 
+        # User asked for "filters the period of it", implying both cards should react.
+        # Investment in period = cost of products added in period OR cost of products sold in period?
+        # Usually "Investment" means inventory value. Filtering inventory value by "registration date" 
+        # gives "Value of products added in last 30 days". 
+        relevant_products = Product.objects.filter(cadastred_date__gte=start_date)
+        total_spent = relevant_products.aggregate(total=Sum(F('cost') * F('quantity_total')))['total'] or 0
+        new_products_count = relevant_products.count()
+    else:
+        recent_sales = Sale.objects.all()
+        relevant_products = Product.objects.all()
+        total_spent = Product.objects.aggregate(total=Sum(F('cost') * F('quantity_total')))['total'] or 0
+        new_products_count = relevant_products.count()
     
     total_sales = recent_sales.aggregate(total=Sum('price_sold'))['total'] or 0
     
-    # Calculate total cost for sold items (cost per unit * quantity sold)
+    # Calculate total cost for sold items in this period
     total_cost = 0
     for sale in recent_sales:
         total_cost += sale.product.cost * sale.quantity
@@ -32,19 +64,21 @@ def product_view(request):
     # Count products with stock available
     stock_count = sum(1 for p in Product.objects.all() if p.quantity_in_stock > 0)
 
-    # Optional: Filter by stock status
-    stock_filter = request.GET.get('stock')
-    
-    if stock_filter == 'in_stock':
-        products = [p for p in products if p.quantity_in_stock > 0]
-    elif stock_filter == 'sold_out':
-        products = [p for p in products if p.quantity_in_stock <= 0]
-
     # Pagination
     from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     page = request.GET.get('page', 1)
-    paginator = Paginator(products, 10) # 10 products per page
-
+    per_page = request.GET.get('per_page', 10)  # Default 10 products per page
+    
+    # Validate per_page value
+    try:
+        per_page = int(per_page)
+        if per_page not in [10, 25, 50, 100]:
+            per_page = 10
+    except (ValueError, TypeError):
+        per_page = 10
+    
+    paginator = Paginator(products, per_page)
+    
     try:
         products = paginator.page(page)
     except PageNotAnInteger:
@@ -52,12 +86,19 @@ def product_view(request):
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
 
+    # Calculate Gross Income (Profit + Investment)
+    gross_income = last_month_balance + total_spent
+
     context = {
         'products_list': products,
-        'stock_filter': stock_filter,
         'new_products_count': new_products_count,
         'last_month_balance': last_month_balance,
-        'stock_count': stock_count,   
+        'stock_count': stock_count,
+        'per_page': per_page,
+        'total_spent': total_spent,
+        'gross_income': gross_income,
+        'period': period,
+        'period_label': period_label,
     }
     
     return render(request, 'views/products.html', context)
