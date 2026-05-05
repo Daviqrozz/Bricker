@@ -1,5 +1,6 @@
 # Variáveis de Ambiente e Segurança
 .env
+/.vscode
 
 # Banco de Dados
 *.db
