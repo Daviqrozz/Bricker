@@ -105,22 +105,25 @@ def product_view(request):
 
 @login_required
 def create_view(request):
-    if request.method == "POST":
-        form = ProductForm(request.POST)
+  if request.method == "POST":
+    form = ProductForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return redirect('products_view')
+    if form.is_valid():
+      product = form.save(commit=False)
+      product.user = request.user
+      product.save()
 
-    form = ProductForm()
-    form_category = CategoryForm()
+      return redirect('products_view')
 
-    context = {
-        'form':form,
-        'form_category':form_category
-    }
+  form = ProductForm()
+  form_category = CategoryForm()
 
-    return render(request, 'views/create.html',context)
+  context = {
+    'form':form,
+    'form_category':form_category
+  }
+
+  return render(request, 'views/create.html', context)
 
 @login_required
 def create_category_view(request):
@@ -143,29 +146,27 @@ def create_category_view(request):
             return redirect('products_view')
 
     return redirect('products_view')
+
 @login_required
 def edit_view(request, id):
-    product = get_object_or_404(Product, pk=id)
+  product = get_object_or_404(Product, pk=id, user=request.user)
 
-    if request.method == 'POST':
-        form = ProductForm(request.POST, instance=product)
+  if request.method == 'POST':
+    form = ProductForm(request.POST, instance=product)
 
-        if form.is_valid():
+    if form.is_valid():
+      form.save()
+      return redirect('products_view')
+  else:
+    form = ProductForm(instance=product)
 
-            form.save()
-            return redirect('products_view')
+  context = {
+    'form': form,
+    'product': product,
+  }
 
-    else:
-        form = ProductForm(instance=product)
-        form_category = CategoryForm()
+  return render(request, 'views/edit.html', context)
 
-    context = {
-        'form': form,
-        'product': product,
-        'form_category':form_category
-    }
-
-    return render(request, 'views/edit.html', context)
 @login_required
 def delete_view(request, id):
     product = get_object_or_404(Product,pk=id)
@@ -178,32 +179,35 @@ def delete_view(request, id):
 
 @login_required
 def sell_product_view(request, id):
-    product = get_object_or_404(Product, pk=id)
+  product = get_object_or_404(Product, pk=id, user=request.user)
 
-    if request.method == 'POST':
-        form = SaleForm(request.POST)
+  if request.method == 'POST':
+    form = SaleForm(request.POST, user=request.user)
 
-        if form.is_valid():
-            sale = form.save(commit=False)
+    if form.is_valid():
+      sale = form.save(commit=False)
 
-            # Double-check stock availability
-            if sale.quantity > product.quantity_in_stock:
-                form.add_error('quantity', f'Quantidade indisponível. Estoque atual: {product.quantity_in_stock}')
-            else:
-                sale.save()
-                return redirect('products_view')
-    else:
-        # Pre-fill the form with the selected product
-        form = SaleForm(initial={
-            'product': product,
-            'price_sold': product.sale_value,
-            'quantity': 1
-        })
+      sale.user = request.user
+      sale.product = product
+      
+      # Double-check stock availability
+      if sale.quantity > product.quantity_in_stock:
+        form.add_error('quantity', f'Quantidade indisponível. Estoque atual: {product.quantity_in_stock}')
+      else:
+        sale.save()
+        return redirect('products_view')
+  else:
+    # Pre-fill the form with the selected product
+    form = SaleForm(initial={
+      'product': product,
+      'price_sold': product.sale_value,
+      'quantity': 1
+    })
 
-    context = {
-        'form': form,
-        'product': product,
-    }
+  context = {
+    'form': form,
+    'product': product,
+  }
 
-    return render(request, 'views/sell.html', context)
+  return render(request, 'views/sell.html', context)
 

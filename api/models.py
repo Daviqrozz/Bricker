@@ -4,7 +4,7 @@ from django.conf import settings
 
 class Category(models.Model):
   name = models.CharField(max_length=100)
-  description = models.TextField(blank=True, null=True) # Novo campo opcional
+  description = models.TextField(blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
@@ -64,7 +64,7 @@ class Product(models.Model):
       return self.sale_value - self.cost
 
   def __str__(self):
-    return f"{self.name} | Dono: {self.user.username}"
+    return self.name
 
 class Sale(models.Model):
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_sales')
@@ -75,4 +75,4 @@ class Sale(models.Model):
   updated_at = models.DateTimeField(auto_now=True)
 
   def __str__(self):
-    return f"Venda: {self.product.name} (x{self.quantity}) - User: {self.user.username}"
+    return self.product.name
