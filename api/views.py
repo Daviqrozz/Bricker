@@ -8,13 +8,13 @@ from datetime import timedelta
 
 @login_required
 def product_view(request):
-    
+
     products = Product.objects.all()
-    
+
     # Date Filtering
     period = request.GET.get('period', '30')
     period_label = "Últimos 30 dias"
-    
+
     start_date = None
     if period == 'all':
         period_label = "Todo o período"
@@ -38,12 +38,12 @@ def product_view(request):
     # Recent Sales Filtering
     if start_date:
         recent_sales = Sale.objects.filter(created_at__gte=start_date)
-        # For investment, we might still want total investment OR investment in period. 
+        # For investment, we might still want total investment OR investment in period.
         # User asked for "filters the period of it", implying both cards should react.
         # Investment in period = cost of products added in period OR cost of products sold in period?
-        # Usually "Investment" means inventory value. Filtering inventory value by "registration date" 
-        # gives "Value of products added in last 30 days". 
-        relevant_products = Product.objects.filter(cadastred_date__gte=start_date)
+        # Usually "Investment" means inventory value. Filtering inventory value by "registration date"
+        # gives "Value of products added in last 30 days".
+        relevant_products = Product.objects.filter(created_at__gte=start_date)
         total_spent = relevant_products.aggregate(total=Sum(F('cost') * F('quantity_total')))['total'] or 0
         new_products_count = relevant_products.count()
     else:
@@ -51,14 +51,14 @@ def product_view(request):
         relevant_products = Product.objects.all()
         total_spent = Product.objects.aggregate(total=Sum(F('cost') * F('quantity_total')))['total'] or 0
         new_products_count = relevant_products.count()
-    
+
     total_sales = recent_sales.aggregate(total=Sum('price_sold'))['total'] or 0
-    
+
     # Calculate total cost for sold items in this period
     total_cost = 0
     for sale in recent_sales:
         total_cost += sale.product.cost * sale.quantity
-    
+
     last_month_balance = total_sales - total_cost
 
     # Count products with stock available
@@ -68,7 +68,7 @@ def product_view(request):
     from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     page = request.GET.get('page', 1)
     per_page = request.GET.get('per_page', 10)  # Default 10 products per page
-    
+
     # Validate per_page value
     try:
         per_page = int(per_page)
@@ -76,9 +76,9 @@ def product_view(request):
             per_page = 10
     except (ValueError, TypeError):
         per_page = 10
-    
+
     paginator = Paginator(products, per_page)
-    
+
     try:
         products = paginator.page(page)
     except PageNotAnInteger:
@@ -100,48 +100,48 @@ def product_view(request):
         'period': period,
         'period_label': period_label,
     }
-    
+
     return render(request, 'views/products.html', context)
 
 @login_required
 def create_view(request):
     if request.method == "POST":
         form = ProductForm(request.POST)
-        
+
         if form.is_valid():
             form.save()
             return redirect('products_view')
 
     form = ProductForm()
     form_category = CategoryForm()
-    
+
     context = {
         'form':form,
         'form_category':form_category
     }
-    
+
     return render(request, 'views/create.html',context)
 
 @login_required
 def create_category_view(request):
     if request.method == "POST":
         form_category = CategoryForm(request.POST)
-        next_url = request.POST.get('next') 
-        
-        print("Valor recebido para NEXT:", next_url) 
-        
-        print("Dados completos do POST:", request.POST) 
-        
+        next_url = request.POST.get('next')
+
+        print("Valor recebido para NEXT:", next_url)
+
+        print("Dados completos do POST:", request.POST)
+
         if form_category.is_valid():
             form_category.save()
-            
+
             if next_url:
 
                 print(f"Redirecionando com sucesso para: {next_url}")
                 return redirect(next_url)
-            
+
             return redirect('products_view')
-            
+
     return redirect('products_view')
 @login_required
 def edit_view(request, id):
@@ -149,7 +149,7 @@ def edit_view(request, id):
 
     if request.method == 'POST':
         form = ProductForm(request.POST, instance=product)
-        
+
         if form.is_valid():
 
             form.save()
@@ -158,34 +158,34 @@ def edit_view(request, id):
     else:
         form = ProductForm(instance=product)
         form_category = CategoryForm()
-        
+
     context = {
         'form': form,
         'product': product,
         'form_category':form_category
     }
-    
+
     return render(request, 'views/edit.html', context)
 @login_required
 def delete_view(request, id):
     product = get_object_or_404(Product,pk=id)
-    
+
     if request.method == 'POST':
         product.delete()
         return redirect('products_view')
-    
+
     return redirect('products_view')
 
 @login_required
 def sell_product_view(request, id):
     product = get_object_or_404(Product, pk=id)
-    
+
     if request.method == 'POST':
         form = SaleForm(request.POST)
-        
+
         if form.is_valid():
             sale = form.save(commit=False)
-            
+
             # Double-check stock availability
             if sale.quantity > product.quantity_in_stock:
                 form.add_error('quantity', f'Quantidade indisponível. Estoque atual: {product.quantity_in_stock}')
@@ -199,12 +199,11 @@ def sell_product_view(request, id):
             'price_sold': product.sale_value,
             'quantity': 1
         })
-    
+
     context = {
         'form': form,
         'product': product,
     }
-    
+
     return render(request, 'views/sell.html', context)
-    
-    
+
