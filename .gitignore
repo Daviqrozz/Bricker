@@ -16,3 +16,7 @@ __pycache__/
 /data/
 
 feats.txt
+
+docker-compose.override.yml
+.docker/
+/docker/mysql/
