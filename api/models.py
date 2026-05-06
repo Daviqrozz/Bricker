@@ -1,6 +1,43 @@
 from django.db import models
 from django.db.models import Sum
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+
+class Plan(models.Model):
+  name = models.CharField(max_length=50, unique=True)
+  description = models.TextField(blank=True, null=True)
+  price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+  max_products = models.IntegerField(default=50, help_text="Limite de produtos para este plano")
+  is_active = models.BooleanField(default=True)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+
+  class Meta:
+    verbose_name = "Plano"
+    verbose_name_plural = "Planos"
+
+  def __str__(self):
+    return self.name
+
+  @property
+  def is_free(self):
+    return self.price == 0
+
+class UserProfile(models.Model):
+  user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
+  onboarding_completed_at = models.DateTimeField(null=True, blank=True)
+  plan = models.ForeignKey(Plan, on_delete=models.PROTECT, default=1, related_name='profiles')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+
+  class Meta:
+    verbose_name = "Perfil"
+    verbose_name_plural = "Perfis"
+
+  def __str__(self):
+    return self.user.username
 
 class Category(models.Model):
   name = models.CharField(max_length=100)
@@ -9,6 +46,7 @@ class Category(models.Model):
   updated_at = models.DateTimeField(auto_now=True)
 
   class Meta:
+    verbose_name = "Categoria"
     verbose_name_plural = "Categorias"
 
   def __str__(self):
@@ -24,6 +62,10 @@ class Product(models.Model):
   sale_value = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+
+  class Meta:
+    verbose_name = "Produto"
+    verbose_name_plural = "Produtos"
 
   @property
   def quantity_sold(self):
@@ -74,5 +116,18 @@ class Sale(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
+  class Meta:
+    verbose_name = "Venda"
+    verbose_name_plural = "vendas"
+
   def __str__(self):
     return self.product.name
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+  if created:
+    UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+  instance.profile.save()
