@@ -126,7 +126,8 @@ class Sale(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
   if created:
-    UserProfile.objects.create(user=instance)
+    default_plan = Plan.objects.filter(id=1).first() or Plan.objects.first()
+    UserProfile.objects.create(user=instance, plan=default_plan)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
