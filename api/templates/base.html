@@ -59,11 +59,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto align-items-center">
             {% if user.is_authenticated %}
-              <li class="d-none d-lg-block">
-                <button class="btn" data-bs-toggle="modal" data-bs-target="#onBoardingModal">
-                  <img src="{% static 'img/icons/help-circle.svg' %}" alt="help circle icon">
-                </button>
-              </li>
+              {% if user_agent.is_pc %}
+                <li class="nav-item">
+                  <button class="btn" data-bs-toggle="modal" data-bs-target="#onBoardingModal">
+                    <img src="{% static 'img/icons/help-circle.svg' %}" alt="help circle icon">
+                  </button>
+                </li>
+              {% endif %}
 
               <li class="nav-item">
                 <a class="nav-link text-white" href="{% url 'products_view' %}">
