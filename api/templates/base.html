@@ -31,24 +31,35 @@
           </h2>
         </a>
 
-        <!-- 2. Toggler: visível só no mobile, no lado direito -->
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
+        {% comment %} Begin:: Mobile menu {% endcomment %}
+        <div class="d-flex align-items-center ms-auto">
+          {% comment %} Onboarding button {% endcomment %}
+          {% if user.is_authenticated %}
+            <button class="btn d-lg-none me-2" data-bs-toggle="modal" data-bs-target="#onBoardingModal">
+              <img src="{% static 'img/icons/help-circle.svg' %}" alt="help" style="width: 24px;">
+            </button>
+          {% endif %}
+
+          <!-- Toggle -->
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        {% comment %} End:: Mobile menu {% endcomment %}
 
         <!-- 3. Conteúdo colapsável -->
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto align-items-center">
             {% if user.is_authenticated %}
-              <li class="mr-4 navbar-item">
+              <li class="d-none d-lg-block">
                 <button class="btn" data-bs-toggle="modal" data-bs-target="#onBoardingModal">
                   <img src="{% static 'img/icons/help-circle.svg' %}" alt="help circle icon">
                 </button>

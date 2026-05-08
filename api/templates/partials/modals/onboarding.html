@@ -51,101 +51,37 @@
         <div class="onb-steps">
           {% comment %} begin:: Step 1 {% endcomment %}
           <div id="onboarding-step-1" class="onboarding-step onb-step">
-            <h3 {% if user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>
-              Aulas ao vivo
-            </h3>
+            <h4 {% if user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>
+              Cadastre seu primeiro produto
+            </h4>
 
-            <iframe
-              src="https://www.youtube.com/embed/4smdiMLYJos"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-            ></iframe>
+            {% if user_agent.is_pc %}
+              <p class="instruction">- Clique no botão de cadastrar.</p>
+              <img src="{% static 'img/onboarding/register_product.png' %}" alt="register product button" />
+            {% endif %}
 
-            <div
-              class="d-flex align-items-center justify-content-end"
-              {% if user_agent.is_mobile %} style="margin-top: 10px" {% endif %}
-            >
-              <span class="see-material-text">Quero ver o material</span>
-              <a
-                type="button"
-                {% comment %} href="{{ asset('/onboardings/Como_acessar_as_Aulas_ao_vivo.pdf') }}" {% endcomment %}
-                href='#'
-                target="_blank"
-                class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center see-material"
-                style="margin-left: 10px;"
-              >
-                <img src="{% static 'img/icons/eye.svg' %}" alt="">
-              </a>
-            </div>
+            {% if user_agent.is_mobile %}
+              <p class="instruction">- Role a tela para baixo e clique no botão com icone de mais.</p>
+              <img src="{% static 'img/onboarding/register_product_mobile.png' %}" alt="register product button" />
+            {% endif %}
           </div>
           {% comment %} end:: Step 1 {% endcomment %}
 
           {% comment %} begin:: Step 2 {% endcomment %}
           <div id="onboarding-step-2" class="onboarding-step onb-step" style="display: none;">
-            <h3 {% if user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>
-              Replay dos Encontros
-            </h3>
 
-            <iframe
-              src="https://www.youtube.com/embed/_bOe5UNALjc"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-            ></iframe>
-
-            <div
-              class="d-flex align-items-center justify-content-end"
-              {% if user_agent.is_mobile %} style="margin-top: 10px" {% endif %}
-            >
-              <span class="see-material-text">Quero ver o material</span>
-              <a
-                type="button"
-                {% comment %} href="{{ asset('/onboardings/COMO_ASSISTIR_AS_AULAS_GRAVADAS_E_ACESSAR_AS_TAREFAS.pdf') }}" {% endcomment %}
-                href='#'
-                target="_blank"
-                class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center see-material"
-                style="margin-left: 10px;"
-              >
-                <img src="{% static 'img/icons/eye.svg' %}">
-              </a>
-            </div>
           </div>
           {% comment %} end:: Step 2 {% endcomment %}
 
           {% comment %} begin:: Step 3 {% endcomment %}
           <div id="onboarding-step-3" class="onboarding-step onb-step mb-38px" style="display: none;">
-            <h3 {% if user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>Como acessar ao Calendário</h3>
 
-            <iframe
-              src="https://www.youtube.com/embed/4j42thqD984"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-            ></iframe>
           </div>
           {% comment %} end:: Step 3 {% endcomment %}
 
           {% comment %} begin:: Step 4 {% endcomment %}
           <div id="onboarding-step-4" class="onboarding-step onb-step" style="display: none;">
-            <h3 class="fs-16px {% if user_agent.is_mobile %} mb-20px {% endif %}">
-              Salve os contatos abaixo e entre em contato se precisar de ajuda!
-            </h3>
-
-            <div class="d-flex {% if user_agent.is_pc %} align-items-center {% else %} align-items-start flex-column {% endif %} justify-content-between mb-6px">
-              <div class="d-flex align-items-center">
-                <img src="{% static 'img/icons/whatsapp.svg' %}" style="margin-right: 13px;"/>
-                <span class="see-material-text">+81 80-3403-9415</span>
-              </div>
-
-              <div class="d-flex align-items-center {% if user_agent.is_mobile %} mt-10px {% endif %}">
-                <img src="{% static 'img/icons/send-mail.svg' %}" style="margin-right: 13px;"/>
-                <span class="see-material-text">suporte@melisecucation.com</span>
-              </div>
-            </div>
+            
           </div>
           {% comment %} end:: Step 4 {% endcomment %}
         </div>
@@ -157,15 +93,7 @@
       >
         <div
           class="d-flex {% if user_agent.is_mobile %} flex-column {% endif %} w-100"
-          style="
-            padding-top: 20px;
-            {% if user_agent.is_pc %}
-              align-items: center;
-            {% else %}
-              align-items: start;
-            {% endif %}
-            justify-content: space-between;
-          "
+          style="{% if user_agent.is_pc %} align-items: center; {% else %} align-items: start; {% endif %} justify-content: space-between;"
         >
           <label class="checkbox-container">
             <input id="onboarding-checkbox" type="checkbox" checked />
@@ -173,10 +101,7 @@
             <span class="checkbox-label">Não exibir novamente</span>
           </label>
 
-          <div
-            class="d-flex align-items-center"
-            {% if user_agent.is_mobile %} style="margin-top: 39px;" {% endif %}
-          >
+          <div class="d-flex align-items-center" style="padding-top: 10px;">
             <a
               id="onboarding-prev"
               type="button"
@@ -213,6 +138,11 @@
 <style>
   .content-color {
     background-color: var(--bg-main) !important;
+  }
+
+  .instruction {
+    font-size: 14px;
+    margin-left: 5px
   }
 
   #onBoardingModal {
@@ -255,12 +185,7 @@
   }
 
   .onb-steps {
-    {% if user_agent.is_pc %}
-      padding: 0px 128px;
-      height: 366.7px;
-    {% else %}
-      height: 264px;
-    {% endif %}
+    height: 366.7px;
   }
 
   .onb-step {
