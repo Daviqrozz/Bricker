@@ -1,0 +1,294 @@
+<div
+  class="modal fade"
+  id="onBoardingModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticBackdropLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-mobile"
+    {% if request.user_agent.is_pc %} style="width: 800px; min-width: 800px;" {% endif %}
+  >
+    <div class="modal-content">
+      <div class="modal-header pb-0" style="align-items: start;">
+        <div>
+          <div class="text-center">
+            <h3 class="my-3 {% if request.user_agent.is_pc %} fs-24px {% else %} fs-16px ta-left {% endif %}">
+              Seja bem vindo(a) ao Portal de Estudo da Melis Education!
+            </h3>
+          </div>
+
+          <h3
+            class="{% if request.user_agent.is_pc %} my-3 {% else %} mt-20px {% endif %}"
+            style="font-size: 14px; color: #767F82 !important;"
+          >
+            Assista aos vídeos abaixo para entender como funciona os cursos na plataforma.
+          </h3>
+        </div>
+
+        <button
+          type="button"
+          class="btn-close"
+          style="margin-top: inherit;"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body py-0 " style="margin-top: 15px">
+        <div id="classroom-tabs" class="onb-tabs">
+          <h3 id="classroom-tab-1" class="onb-tab classroom-tab active" onclick="displayClassroomOnbStep(1)">Passo 1</h3>
+          <h3 id="classroom-tab-2" class="onb-tab classroom-tab" onclick="displayClassroomOnbStep(2)">Passo 2</h3>
+          <h3 id="classroom-tab-3" class="onb-tab classroom-tab" onclick="displayClassroomOnbStep(3)">Passo 3</h3>
+          <h3 id="classroom-tab-4" class="onb-tab classroom-tab" onclick="displayClassroomOnbStep(4)">Passo 4</h3>
+        </div>
+
+        <div class="onb-steps">
+          {% comment %} begin:: Step 1 {% endcomment %}
+          <div id="classroom-step-1" class="classroom-step onb-step">
+            <h3 {% if request.user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>
+              Aulas ao vivo
+            </h3>
+
+            <iframe
+              src="https://www.youtube.com/embed/4smdiMLYJos"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+
+            <div
+              class="d-flex align-items-center justify-content-end"
+              {% if request.user_agent.is_mobile %} style="margin-top: 10px" {% endif %}
+            >
+              <span class="see-material-text">Quero ver o material</span>
+              <a
+                type="button"
+                {% comment %} href="{{ asset('/onboardings/Como_acessar_as_Aulas_ao_vivo.pdf') }}" {% endcomment %}
+                href='#'
+                target="_blank"
+                class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center see-material"
+                style="margin-left: 10px;"
+              >
+                {% comment %} <img src="{{ asset('images/icons/eye.svg') }}" alt=""> {% endcomment %}
+              </a>
+            </div>
+          </div>
+          {% comment %} end:: Step 1 {% endcomment %}
+
+          {% comment %} begin:: Step 2 {% endcomment %}
+          <div id="classroom-step-2" class="classroom-step onb-step" style="display: none;">
+            <h3 {% if request.user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>
+              Replay dos Encontros
+            </h3>
+
+            <iframe
+              src="https://www.youtube.com/embed/_bOe5UNALjc"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+
+            <div
+              class="d-flex align-items-center justify-content-end"
+              {% if request.user_agent.is_mobile %} style="margin-top: 10px" {% endif %}
+            >
+              <span class="see-material-text">Quero ver o material</span>
+              <a
+                type="button"
+                {% comment %} href="{{ asset('/onboardings/COMO_ASSISTIR_AS_AULAS_GRAVADAS_E_ACESSAR_AS_TAREFAS.pdf') }}" {% endcomment %}
+                href='#'
+                target="_blank"
+                class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center see-material"
+                style="margin-left: 10px;"
+              >
+                {% comment %} <img src="{{ asset('images/icons/eye.svg') }}"> {% endcomment %}
+              </a>
+            </div>
+          </div>
+          {% comment %} end:: Step 2 {% endcomment %}
+
+          {% comment %} begin:: Step 3 {% endcomment %}
+          <div id="classroom-step-3" class="classroom-step onb-step mb-38px" style="display: none;">
+            <h3 {% if request.user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>Como acessar ao Calendário</h3>
+
+            <iframe
+              src="https://www.youtube.com/embed/4j42thqD984"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+          {% comment %} end:: Step 3 {% endcomment %}
+
+          {% comment %} begin:: Step 4 {% endcomment %}
+          <div id="classroom-step-4" class="classroom-step onb-step" style="display: none;">
+            <h3 class="fs-16px {% if request.user_agent.is_mobile %} mb-20px {% endif %}">
+              Salve os contatos abaixo e entre em contato se precisar de ajuda!
+            </h3>
+
+            <div class="d-flex {% if request.user_agent.is_pc %} align-items-center {% else %} align-items-start flex-column {% endif %} justify-content-between mb-6px">
+              <div class="d-flex align-items-center">
+                {% comment %} <img src="{{ asset('images/icons/whats-app.svg') }}" style="margin-right: 13px;"/> {% endcomment %}
+                <span class="see-material-text">+81 80-3403-9415</span>
+              </div>
+
+              <div class="d-flex align-items-center {% if request.user_agent.is_mobile %} mt-10px {% endif %}">
+                {% comment %} <img src="{{ asset('images/icons/moving-letter_icon.svg') }}" style="margin-right: 13px;"/> {% endcomment %}
+                <span class="see-material-text">suporte@melisecucation.com</span>
+              </div>
+            </div>
+          </div>
+          {% comment %} end:: Step 4 {% endcomment %}
+        </div>
+      </div>
+
+      <div
+        class="modal-footer d-flex justify-content-center"
+        style="padding-top: 10px; {% if request.user_agent.is_mobile %} margin-top: 20px {% endif %}"
+      >
+        <div
+          class="d-flex {% if request.user_agent.is_mobile %} flex-column {% endif %}"
+          style="
+            border-top: 1px solid #EFF0F0;
+            width: 100%;
+            padding-top: 20px;
+            {% if request.user_agent.is_pc %}
+              align-items: center;
+            {% else %}
+              align-items: start;
+            {% endif %}
+            justify-content: space-between;
+          "
+        >
+          <label class="checkbox-container">
+            <input id="classroom-onb-checkbox" type="checkbox" checked />
+            <span class="checkmark"></span>
+            <span class="checkbox-label">Não exibir novamente</span>
+          </label>
+
+          <div
+            class="d-flex align-items-center"
+            {% if request.user_agent.is_mobile %} style="margin-top: 39px;" {% endif %}
+          >
+            <a
+              id="classroom-onb-prev"
+              type="button"
+              class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button disabled"
+            >
+              <span style="font-size: 14px;">Voltar</span>
+            </a>
+
+            <a
+              id="classroom-onb-next"
+              type="button"
+              onclick="displayClassroomOnbStep(2)"
+              style="margin-left: 20px;"
+              class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button ml-20px"
+            >
+              <span style="font-size: 14px;">Próximo</span>
+            </a>
+
+            <a
+              id="classroom-onb-close"
+              type="button"
+              data-bs-dismiss="modal"
+              style="display: none !important;"
+              class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button ml-20px"
+            >
+              <span style="font-size: 14px;">Fechar</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #classroom-onb-modal {
+    padding: 10px;
+  }
+
+  #course-step-5 {
+    height: 100%;
+    justify-content: center;
+  }
+
+  @media (max-width: 576px) {
+    .modal-dialog-mobile {
+      width: 100% !important;
+      min-width: unset !important;
+      margin: 0px !important;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    $('#classroom-onb-modal').on('hidden.bs.modal', function() {
+      var onboardingPreference = $('#classroom-onb-checkbox').is(':checked') ? 0 : 1;
+
+      $.ajax({
+        url: '/students/' + studentId + '/update-classroom-onboarding-preference',
+        method: 'GET',
+        data: {
+          preference: onboardingPreference
+        }
+      });
+    });
+  });
+
+  function showOnbClassroomModal() {
+    $('#classroom-onb-modal').modal('show');
+  }
+
+  function displayClassroomOnbStep(step) {
+    $(".classroom-step").css("display", "none");
+    $(".classroom-tab.active").removeClass('active');
+    $(`#classroom-tab-${step}`).addClass('active');
+    $('#classroom-step-' + step).attr('style', 'display: flex !important');
+    $('#classroom-onb-next').attr('style', 'display: flex !important');
+    $('#classroom-onb-close').attr('style', 'display: none !important');
+    $('#classroom-onb-prev').removeClass('disabled');
+
+    switch (step) {
+      case 1:
+        $('#classroom-onb-prev').addClass('disabled');
+        $('#classroom-onb-prev').removeAttr('onclick');
+        $('#classroom-onb-next').attr('onclick', 'displayClassroomOnbStep(2)');
+        break;
+      case 2:
+        $('#classroom-onb-prev').attr('onclick', 'displayClassroomOnbStep(1)');
+        $('#classroom-onb-next').attr('onclick', 'displayClassroomOnbStep(3)');
+        break;
+      case 3:
+        $('#classroom-onb-prev').attr('onclick', 'displayClassroomOnbStep(2)');
+        $('#classroom-onb-next').attr('onclick', 'displayClassroomOnbStep(4)');
+        break;
+      case 4:
+        $('#classroom-onb-prev').attr('onclick', 'displayClassroomOnbStep(3)');
+        $('#classroom-onb-next').attr('style', 'display: none !important');
+        $('#classroom-onb-close').attr('style', 'display: flex !important');
+        break;
+    }
+
+    if ($(window).width() < 768) {
+      var container = $(".onb-tabs");
+      var targetTab = $(`#classroom-tab-${step}`);
+      var targetPosition = targetTab.position().left - container.scrollLeft() + container.offset().left;
+      var containerWidth = container.width();
+      var tabPosition = targetTab.position().left;
+      var tabWidth = targetTab.outerWidth();
+
+      if (tabPosition < 0 || tabPosition + tabWidth > containerWidth) {
+        container.animate({ scrollLeft: targetPosition }, 500);
+      }
+    }
+  }
+</script>
