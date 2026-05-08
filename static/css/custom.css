@@ -545,6 +545,11 @@ p, span, h1, h2, h3, h4, h5, h6 {
 /* End:: Padding */
 
 /* Begin:: Margin */
+.my-2 {
+  margin-top: .50rem !important;
+  margin-bottom: .50rem !important
+}
+
 .my-3 {
   margin-top: .75rem !important;
   margin-bottom: .75rem !important
@@ -568,8 +573,20 @@ p, span, h1, h2, h3, h4, h5, h6 {
 }
 
 /* Begin:: Font-size */
+.fs-13px {
+  font-size: 13px !important;
+}
+
+.fs-14px {
+  font-size: 14px !important;
+}
+
 .fs-16px {
-  font-size: 16px;
+  font-size: 16px !important;
+}
+
+.fs-18px {
+  font-size: 18px !important;
 }
 
 .fs-24px {

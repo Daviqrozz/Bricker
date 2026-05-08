@@ -12,38 +12,40 @@
     class="modal-dialog modal-dialog-centered modal-dialog-mobile"
     {% if user_agent.is_pc %} style="width: 800px; min-width: 800px;" {% endif %}
   >
-    <div class="modal-content">
+    <div class="content-color modal-content">
+      {% comment %} Begin:: Modal Header {% endcomment %}
       <div class="modal-header pb-0" style="align-items: start;">
-        <div>
+        <div {% if user_agent.is_pc %} class="d-flex flex-column justify-content-center w-100" {% endif %}>
           <div class="text-center">
-            <h3 class="my-3 {% if user_agent.is_pc %} fs-24px {% else %} fs-16px ta-left {% endif %}">
-              Seja bem vindo(a) ao Portal de Estudo da Melis Education!
+            <h3 class="my-2 {% if user_agent.is_pc %} fs-24px {% else %} fs-16px ta-left {% endif %}">
+              Seja bem vindo(a) ao Bricker!
+            </h3>
+
+            <h3
+              class="{% if user_agent.is_pc %} my-3 {% else %} mt-20px {% endif %}"
+              style="{% if user_agent.is_pc %} font-size: 18px; {% else %} font-size: 14px; {% endif %}"
+            >
+              Siga os passos abaixo para entender como funciona a plataforma.
             </h3>
           </div>
-
-          <h3
-            class="{% if user_agent.is_pc %} my-3 {% else %} mt-20px {% endif %}"
-            style="font-size: 14px; color: #767F82 !important;"
-          >
-            Assista aos vídeos abaixo para entender como funciona os cursos na plataforma.
-          </h3>
         </div>
 
         <button
           type="button"
-          class="btn-close"
+          class="btn-close btn-close-white"
           style="margin-top: inherit;"
           data-bs-dismiss="modal"
           aria-label="Close"
         ></button>
       </div>
+      {% comment %} End:: Modal Header {% endcomment %}
 
       <div class="modal-body py-0" style="margin-top: 15px">
-        <div id="onboarding-tabs" class="onb-tabs">
-          <h3 id="onboarding-tab-1" class="onb-tab onboarding-tab active" onclick="displayClassroomOnbStep(1)">Passo 1</h3>
-          <h3 id="onboarding-tab-2" class="onb-tab onboarding-tab" onclick="displayClassroomOnbStep(2)">Passo 2</h3>
-          <h3 id="onboarding-tab-3" class="onb-tab onboarding-tab" onclick="displayClassroomOnbStep(3)">Passo 3</h3>
-          <h3 id="onboarding-tab-4" class="onb-tab onboarding-tab" onclick="displayClassroomOnbStep(4)">Passo 4</h3>
+        <div id="onboarding-tabs" class="onb-tabs {% if user_agent.is_pc %} justify-content-center {% endif %}">
+          <h5 id="onboarding-tab-1" class="onb-tab onboarding-tab active" onclick="displayOnboardingStep(1)">Passo 1</h5>
+          <h5 id="onboarding-tab-2" class="onb-tab onboarding-tab" onclick="displayOnboardingStep(2)">Passo 2</h5>
+          <h5 id="onboarding-tab-3" class="onb-tab onboarding-tab" onclick="displayOnboardingStep(3)">Passo 3</h5>
+          <h5 id="onboarding-tab-4" class="onb-tab onboarding-tab" onclick="displayOnboardingStep(4)">Passo 4</h5>
         </div>
 
         <div class="onb-steps">
@@ -154,10 +156,8 @@
         style="padding-top: 10px; {% if user_agent.is_mobile %} margin-top: 20px {% endif %}"
       >
         <div
-          class="d-flex {% if user_agent.is_mobile %} flex-column {% endif %}"
+          class="d-flex {% if user_agent.is_mobile %} flex-column {% endif %} w-100"
           style="
-            border-top: 1px solid #EFF0F0;
-            width: 100%;
             padding-top: 20px;
             {% if user_agent.is_pc %}
               align-items: center;
@@ -188,7 +188,7 @@
             <a
               id="onboarding-next"
               type="button"
-              onclick="displayClassroomOnbStep(2)"
+              onclick="displayOnboardingStep(2)"
               style="margin-left: 20px;"
               class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button ml-20px"
             >
@@ -199,8 +199,7 @@
               id="onboarding-close"
               type="button"
               data-bs-dismiss="modal"
-              style="display: none !important;"
-              class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button ml-20px"
+              class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button ml-20px d-none"
             >
               <span style="font-size: 14px;">Fechar</span>
             </a>
@@ -212,6 +211,10 @@
 </div>
 
 <style>
+  .content-color {
+    background-color: var(--bg-main) !important;
+  }
+
   #onBoardingModal {
     padding: 10px;
   }
@@ -271,7 +274,7 @@
     margin-bottom: 22px;
 
     {% if user_agent.is_pc %}
-      border-bottom: 4px solid #F2F2F5;
+      border-bottom: 1px solid #F2F2F5;
     {% endif %}
 
     {% if user_agent.is_mobile %}
@@ -281,20 +284,22 @@
     {% endif %}
   }
 
-  .onb-tabs::-webkit-scrollbar {
-    height: 5px;
-    width: 20px !important;
-  }
+  {% if user_agent.is_mobile %}
+    .onb-tabs::-webkit-scrollbar {
+      height: 5px;
+      width: 20px !important;
+    }
 
-  .onb-tabs::-webkit-scrollbar-thumb {
-    background-color: #329FBA;
-    border-radius: 4px;
-  }
+    .onb-tabs::-webkit-scrollbar-thumb {
+      background-color: #329FBA;
+      border-radius: 4px;
+    }
 
-  .onb-tabs::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-    border-radius: 4px;
-  }
+    .onb-tabs::-webkit-scrollbar-track {
+      background-color: #f1f1f1;
+      border-radius: 4px;
+    }
+  {% endif %}
 
   .onb-btn {
     height: 40px;
@@ -339,33 +344,33 @@
     $('#onBoardingModal').modal('show');
   }
 
-  function displayClassroomOnbStep(step) {
+  function displayOnboardingStep(step) {
     $(".onboarding-step").css("display", "none");
     $(".onboarding-tab.active").removeClass('active');
     $(`#onboarding-tab-${step}`).addClass('active');
-    $('#onboarding-step-' + step).attr('style', 'display: flex !important');
-    $('#onboarding-next').attr('style', 'display: flex !important');
-    $('#onboarding-close').attr('style', 'display: none !important');
+    $('#onboarding-step-' + step).css('display', 'flex');
+    $('#onboarding-next').removeClass('d-none');
+    $('#onboarding-close').addClass('d-none');
     $('#onboarding-prev').removeClass('disabled');
 
     switch (step) {
       case 1:
         $('#onboarding-prev').addClass('disabled');
         $('#onboarding-prev').removeAttr('onclick');
-        $('#onboarding-next').attr('onclick', 'displayClassroomOnbStep(2)');
+        $('#onboarding-next').attr('onclick', 'displayOnboardingStep(2)');
         break;
       case 2:
-        $('#onboarding-prev').attr('onclick', 'displayClassroomOnbStep(1)');
-        $('#onboarding-next').attr('onclick', 'displayClassroomOnbStep(3)');
+        $('#onboarding-prev').attr('onclick', 'displayOnboardingStep(1)');
+        $('#onboarding-next').attr('onclick', 'displayOnboardingStep(3)');
         break;
       case 3:
-        $('#onboarding-prev').attr('onclick', 'displayClassroomOnbStep(2)');
-        $('#onboarding-next').attr('onclick', 'displayClassroomOnbStep(4)');
+        $('#onboarding-prev').attr('onclick', 'displayOnboardingStep(2)');
+        $('#onboarding-next').attr('onclick', 'displayOnboardingStep(4)');
         break;
       case 4:
-        $('#onboarding-prev').attr('onclick', 'displayClassroomOnbStep(3)');
-        $('#onboarding-next').attr('style', 'display: none !important');
-        $('#onboarding-close').attr('style', 'display: flex !important');
+        $('#onboarding-prev').addClass('d-none');
+        $('#onboarding-next').addClass('d-none');
+        $('#onboarding-close').removeClass('d-none');
         break;
     }
 
