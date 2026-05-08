@@ -28,7 +28,7 @@ class Plan(models.Model):
 class UserProfile(models.Model):
   user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
   onboarding_completed_at = models.DateTimeField(null=True, blank=True)
-  plan = models.ForeignKey(Plan, on_delete=models.PROTECT, default=1, related_name='profiles')
+  plan = models.ForeignKey(Plan, on_delete=models.SET_NULL, null=True, blank=True, related_name='profiles')
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
