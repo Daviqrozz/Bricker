@@ -38,11 +38,7 @@ def product_view(request):
     # Recent Sales Filtering
     if start_date:
         recent_sales = Sale.objects.filter(created_at__gte=start_date)
-        # For investment, we might still want total investment OR investment in period.
-        # User asked for "filters the period of it", implying both cards should react.
-        # Investment in period = cost of products added in period OR cost of products sold in period?
-        # Usually "Investment" means inventory value. Filtering inventory value by "registration date"
-        # gives "Value of products added in last 30 days".
+        
         relevant_products = Product.objects.filter(created_at__gte=start_date)
         total_spent = relevant_products.aggregate(total=Sum(F('cost') * F('quantity_total')))['total'] or 0
         new_products_count = relevant_products.count()

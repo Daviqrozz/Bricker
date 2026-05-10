@@ -10,7 +10,7 @@
         <div class="card card-dark shadow-soft rounded-3 border-0">
 
           {% comment %} Title {% endcomment %}
-          <div class="card-header header-color border-bottom border-cor-borda pt-3 pb-2">
+          <div class="card-header header-color  pt-3 pb-2">
             <h2 class="card-title text-center mb-0">
               <i class="bi bi-cart-plus me-2"></i> Vender Produto
             </h2>
@@ -27,7 +27,7 @@
             {% endif %}
 
             {% comment %} Sale Information {% endcomment %}
-            <div class="alert alert-primary mb-4">
+            <div class="border border-dark bg-dark alert alert-primary mb-4">
               <h5 class="mb-2"><i class="bi bi-box-seam me-2"></i>{{ product.name }}</h5>
               <p class="mb-1"><strong>Categoria:</strong> {{ product.category }}</p>
               <p class="mb-1"><strong>Estoque Disponível:</strong> {{ product.quantity_in_stock }} unidades</p>

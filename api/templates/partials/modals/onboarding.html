@@ -1,18 +1,10 @@
 {% load static %}
-<div
-  class="modal fade"
-  id="onBoardingModal"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
-  <div
-    class="modal-dialog modal-dialog-centered modal-dialog-mobile"
-    {% if user_agent.is_pc %} style="width: 800px; min-width: 800px;" {% endif %}
-  >
+<div class="modal fade" id="onBoardingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-mobile" {% if user_agent.is_pc %}
+    style="width: 800px; min-width: 800px; margin: auto;" {% endif %}>
     <div class="content-color modal-content">
+
       {% comment %} Begin:: Modal Header {% endcomment %}
       <div class="modal-header pb-0" style="align-items: start;">
         <div {% if user_agent.is_pc %} class="d-flex flex-column justify-content-center w-100" {% endif %}>
@@ -20,81 +12,101 @@
             <h3 class="my-2 {% if user_agent.is_pc %} fs-24px {% else %} fs-16px ta-left {% endif %}">
               Seja bem vindo(a) ao Bricker!
             </h3>
-
-            <h3
-              class="{% if user_agent.is_pc %} my-3 {% else %} mt-20px {% endif %}"
-              style="{% if user_agent.is_pc %} font-size: 18px; {% else %} font-size: 14px; {% endif %}"
-            >
+            <h3 class="{% if user_agent.is_pc %} my-3 {% else %} mt-20px {% endif %}"
+              style="{% if user_agent.is_pc %} font-size: 18px; {% else %} font-size: 14px; {% endif %}">
               Siga os passos abaixo para entender como funciona a plataforma.
             </h3>
           </div>
         </div>
 
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          style="margin-top: inherit;"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close btn-close-white" style="margin-top: inherit;" data-bs-dismiss="modal"
+          aria-label="Close"></button>
       </div>
       {% comment %} End:: Modal Header {% endcomment %}
 
       <div class="modal-body py-0" style="margin-top: 15px">
         <div id="onboarding-tabs" class="onb-tabs {% if user_agent.is_pc %} justify-content-center {% endif %}">
-          <h5 id="onboarding-tab-1" class="onb-tab onboarding-tab active" onclick="displayOnboardingStep(1)">Passo 1</h5>
+          <h5 id="onboarding-tab-1" class="onb-tab onboarding-tab active" onclick="displayOnboardingStep(1)">Passo 1
+          </h5>
           <h5 id="onboarding-tab-2" class="onb-tab onboarding-tab" onclick="displayOnboardingStep(2)">Passo 2</h5>
           <h5 id="onboarding-tab-3" class="onb-tab onboarding-tab" onclick="displayOnboardingStep(3)">Passo 3</h5>
           <h5 id="onboarding-tab-4" class="onb-tab onboarding-tab" onclick="displayOnboardingStep(4)">Passo 4</h5>
         </div>
 
         <div class="onb-steps">
+
           {% comment %} begin:: Step 1 {% endcomment %}
-          <div id="onboarding-step-1" class="onboarding-step onb-step">
+          <div id="onboarding-step-1" class="onboarding-step onb-step active-step">
             <h4 {% if user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>
-              Cadastre seu primeiro produto
+              Cadastrando seu primeiro produto
             </h4>
-
             {% if user_agent.is_pc %}
-              <p class="instruction">- Clique no botão de cadastrar.</p>
-              <img src="{% static 'img/onboarding/register_product.png' %}" alt="register product button" />
+            <p class="instruction">- Clique no '+' para cadastrar um novo produto no estoque.</p>
+            <img src="{% static 'img/onboarding/step1-pc.png' %}" alt="register product button" />
             {% endif %}
-
             {% if user_agent.is_mobile %}
-              <p class="instruction">- Role a tela para baixo e clique no botão com icone de mais.</p>
-              <img src="{% static 'img/onboarding/register_product_mobile.png' %}" alt="register product button" />
+            <p class="instruction">- Role a tela para baixo e clique no botão com icone de mais.</p>
+            <img src="{% static 'img/onboarding/register_product_mobile.png' %}" alt="register product button" />
             {% endif %}
           </div>
           {% comment %} end:: Step 1 {% endcomment %}
 
           {% comment %} begin:: Step 2 {% endcomment %}
-          <div id="onboarding-step-2" class="onboarding-step onb-step" style="display: none;">
-
+          <div id="onboarding-step-2" class="onboarding-step onb-step">
+            <h4 {% if user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>
+              Insira as informações do seu produto
+            </h4>
+            {% if user_agent.is_pc %}
+            <p class="instruction">- Após inserir tudo, clique no botão de salvar produto.</p>
+            <img src="{% static 'img/onboarding/step2-pc.png' %}" alt="register product button" />
+            {% endif %}
+            {% if user_agent.is_mobile %}
+            <p class="instruction">- Role a tela para baixo e clique no botão com icone de mais.</p>
+            <img src="{% static 'img/onboarding/step2-pc.png' %}" alt="register product button" />
+            {% endif %}
           </div>
           {% comment %} end:: Step 2 {% endcomment %}
 
           {% comment %} begin:: Step 3 {% endcomment %}
-          <div id="onboarding-step-3" class="onboarding-step onb-step mb-38px" style="display: none;">
-
+          <div id="onboarding-step-3" class="onboarding-step onb-step">
+            <h4 {% if user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>
+              Registrando uma venda
+            </h4>
+            {% if user_agent.is_pc %}
+            <p class="instruction">- No produto cadastrado, clique no carrinho verde para vende-lo.</p>
+            <img src="{% static 'img/onboarding/step3-pc.png' %}" alt="register product button" />
+            {% endif %}
+            {% if user_agent.is_mobile %}
+            <p class="instruction">- Role a tela para baixo e clique no botão com icone de mais.</p>
+            <img src="{% static 'img/onboarding/step3-pc.png' %}" alt="register product button" />
+            {% endif %}
           </div>
           {% comment %} end:: Step 3 {% endcomment %}
 
           {% comment %} begin:: Step 4 {% endcomment %}
-          <div id="onboarding-step-4" class="onboarding-step onb-step" style="display: none;">
-            
+          <div id="onboarding-step-4" class="onboarding-step onb-step">
+            <h4 {% if user_agent.is_mobile %} class="fs-16px mb-20px" {% endif %}>
+              Registre a venda
+            </h4>
+            {% if user_agent.is_pc %}
+            <p class="instruction">- Após inserir tudo, clique em confirmar venda, o sistema ja vai contabilizar seu
+              faturamento e lucro!</p>
+            <img src="{% static 'img/onboarding/step4-pc.png' %}" alt="register product button" />
+            {% endif %}
+            {% if user_agent.is_mobile %}
+            <p class="instruction">- Role a tela para baixo e clique no botão com icone de mais.</p>
+            <img src="{% static 'img/onboarding/step4-pc.png' %}" alt="register product button" />
+            {% endif %}
           </div>
           {% comment %} end:: Step 4 {% endcomment %}
+
         </div>
       </div>
 
-      <div
-        class="modal-footer d-flex justify-content-center"
-        style="padding-top: 10px; {% if user_agent.is_mobile %} margin-top: 20px {% endif %}"
-      >
-        <div
-          class="d-flex {% if user_agent.is_mobile %} flex-column {% endif %} w-100"
-          style="{% if user_agent.is_pc %} align-items: center; {% else %} align-items: start; {% endif %} justify-content: space-between;"
-        >
+      <div class="modal-footer d-flex justify-content-center"
+        style="padding-top: 10px; {% if user_agent.is_mobile %} margin-top: 20px {% endif %}">
+        <div class="d-flex {% if user_agent.is_mobile %} flex-column {% endif %} w-100"
+          style="{% if user_agent.is_pc %} align-items: center; {% else %} align-items: start; {% endif %} justify-content: space-between;">
           <label class="checkbox-container">
             <input id="onboarding-checkbox" type="checkbox" checked />
             <span class="checkmark"></span>
@@ -102,38 +114,28 @@
           </label>
 
           <div class="d-flex align-items-center" style="padding-top: 10px;">
-            <a
-              id="onboarding-prev"
-              type="button"
-              class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button disabled"
-            >
+            <a id="onboarding-prev" type="button"
+              class="btn bg-danger btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button disabled">
               <span style="font-size: 14px;">Voltar</span>
             </a>
 
-            <a
-              id="onboarding-next"
-              type="button"
-              onclick="displayOnboardingStep(2)"
-              style="margin-left: 20px;"
-              class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button ml-20px"
-            >
+            <a id="onboarding-next" type="button" onclick="displayOnboardingStep(2)" style="margin-left: 20px;"
+              class="btn bg-success btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button ml-20px">
               <span style="font-size: 14px;">Próximo</span>
             </a>
 
-            <a
-              id="onboarding-close"
-              type="button"
-              data-bs-dismiss="modal"
-              class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button ml-20px d-none"
-            >
+            <a id="onboarding-close" type="button" data-bs-dismiss="modal"
+              class="btn bg-primary btn-shadow text-white d-flex align-items-center justify-content-center modal-confirm-button ml-20px d-none">
               <span style="font-size: 14px;">Fechar</span>
             </a>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
+
 
 <style>
   .content-color {
@@ -142,16 +144,21 @@
 
   .instruction {
     font-size: 14px;
-    margin-left: 5px
+    margin-left: 5px;
   }
 
   #onBoardingModal {
     padding: 10px;
   }
 
-  #course-step-5 {
-    height: 100%;
-    justify-content: center;
+  .onboarding-step {
+    display: none;
+    flex-direction: column;
+  }
+
+
+  .onboarding-step.active-step {
+    display: flex;
   }
 
   .onb-tab {
@@ -162,15 +169,27 @@
     top: 4px;
     cursor: pointer;
 
-    {% if user_agent.is_mobile %}
-      white-space: nowrap;
-    {% endif %}
+      {
+      % if user_agent.is_mobile %
+    }
 
-    {% if user_agent.is_tablet %}
-      font-size: 16px;
-      height: 32px;
-      white-space: nowrap;
-    {% endif %}
+    white-space: nowrap;
+
+      {
+      % endif %
+    }
+
+      {
+      % if user_agent.is_tablet %
+    }
+
+    font-size: 16px;
+    height: 32px;
+    white-space: nowrap;
+
+      {
+      % endif %
+    }
   }
 
   .onb-tab:hover {
@@ -186,11 +205,7 @@
 
   .onb-steps {
     height: 366.7px;
-  }
-
-  .onb-step {
-    display: flex;
-    flex-direction: column;
+    overflow-y: auto;
   }
 
   .onb-tabs {
@@ -198,43 +213,55 @@
     gap: 40px;
     margin-bottom: 22px;
 
-    {% if user_agent.is_pc %}
-      border-bottom: 1px solid #F2F2F5;
-    {% endif %}
+      {
+      % if user_agent.is_pc %
+    }
 
-    {% if user_agent.is_mobile %}
-      align-items: end;
-      overflow-x: scroll;
-      overflow-y: hidden;
-    {% endif %}
+    border-bottom: 1px solid #F2F2F5;
+
+      {
+      % endif %
+    }
+
+      {
+      % if user_agent.is_mobile %
+    }
+
+    align-items: end;
+    overflow-x: scroll;
+    overflow-y: hidden;
+
+      {
+      % endif %
+    }
   }
 
-  {% if user_agent.is_mobile %}
-    .onb-tabs::-webkit-scrollbar {
-      height: 5px;
-      width: 20px !important;
-    }
+    {
+    % if user_agent.is_mobile %
+  }
 
-    .onb-tabs::-webkit-scrollbar-thumb {
-      background-color: #329FBA;
-      border-radius: 4px;
-    }
+  .onb-tabs::-webkit-scrollbar {
+    height: 5px;
+    width: 20px !important;
+  }
 
-    .onb-tabs::-webkit-scrollbar-track {
-      background-color: #f1f1f1;
-      border-radius: 4px;
-    }
-  {% endif %}
+  .onb-tabs::-webkit-scrollbar-thumb {
+    background-color: #329FBA;
+    border-radius: 4px;
+  }
+
+  .onb-tabs::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 4px;
+  }
+
+    {
+    % endif %
+  }
 
   .onb-btn {
     height: 40px;
     width: 136px;
-  }
-
-  .see-material-box {
-    {% if user_agent.is_mobile %}
-      margin-top: 10px
-    {% endif %}
   }
 
   .see-material-text {
@@ -248,15 +275,24 @@
     width: 38px;
     margin: 0px 0px 0px 10px;
   }
+
+  @media (min-width: 768px) {
+    #onBoardingModal .modal-dialog {
+      margin: auto !important;
+    }
+  }
 </style>
 
+
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    $('#onBoardingModal').on('hidden.bs.modal', function() {
-      var onboardingPreference = $('#onboarding-checkbox').is(':checked') ? 0 : 1;
+  document.addEventListener('DOMContentLoaded', function () {
+    $('#onBoardingModal').on('hidden.bs.modal', function () {
+
+      var onboardingPreference = $('#onboarding-checkbox').is(':checked') ? 1 : 0;
 
       $.ajax({
-        url: '/students/' + studentId + '/update-onboardingoarding-preference',
+
+        url: '/students/' + studentId + '/update-onboarding-preference',
         method: 'GET',
         data: {
           preference: onboardingPreference
@@ -270,13 +306,14 @@
   }
 
   function displayOnboardingStep(step) {
-    $(".onboarding-step").css("display", "none");
+    $(".onboarding-step").removeClass('active-step');
     $(".onboarding-tab.active").removeClass('active');
     $(`#onboarding-tab-${step}`).addClass('active');
-    $('#onboarding-step-' + step).css('display', 'flex');
+    $(`#onboarding-step-${step}`).addClass('active-step');
+
     $('#onboarding-next').removeClass('d-none');
     $('#onboarding-close').addClass('d-none');
-    $('#onboarding-prev').removeClass('disabled');
+    $('#onboarding-prev').removeClass('disabled').removeClass('d-none');
 
     switch (step) {
       case 1:
@@ -293,7 +330,7 @@
         $('#onboarding-next').attr('onclick', 'displayOnboardingStep(4)');
         break;
       case 4:
-        $('#onboarding-prev').addClass('d-none');
+        $('#onboarding-prev').attr('onclick', 'displayOnboardingStep(3)');
         $('#onboarding-next').addClass('d-none');
         $('#onboarding-close').removeClass('d-none');
         break;
@@ -302,13 +339,12 @@
     if ($(window).width() < 768) {
       var container = $(".onb-tabs");
       var targetTab = $(`#onboarding-tab-${step}`);
-      var targetPosition = targetTab.position().left - container.scrollLeft() + container.offset().left;
-      var containerWidth = container.width();
       var tabPosition = targetTab.position().left;
       var tabWidth = targetTab.outerWidth();
+      var containerWidth = container.width();
 
       if (tabPosition < 0 || tabPosition + tabWidth > containerWidth) {
-        container.animate({ scrollLeft: targetPosition }, 500);
+        container.animate({ scrollLeft: container.scrollLeft() + tabPosition }, 500);
       }
     }
   }
