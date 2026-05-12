@@ -4,6 +4,13 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from django_multitenant.models import TenantModel, TenantManager
+from django_multitenant.fields import TenantForeignKey
+
+def get_tenant_value(self):
+  return self.id
+
+User.tenant_value = property(get_tenant_value)
 
 class Plan(models.Model):
   name = models.CharField(max_length=50, unique=True)
@@ -52,8 +59,8 @@ class Category(models.Model):
   def __str__(self):
     return self.name
 
-class Product(models.Model):
-  user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+class Product(TenantModel):
+  user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_products')
   name = models.CharField(max_length=130)
   observation = models.CharField(max_length=200, blank=True, null=True)
   category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='products', null=True)
@@ -63,10 +70,14 @@ class Product(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
+  tenant_id = 'user_id'
+  objects = TenantManager()
+
   class Meta:
     verbose_name = "Produto"
     verbose_name_plural = "Produtos"
     ordering = ['-created_at']
+    constraints = [models.UniqueConstraint(fields=['id', 'user'], name='unique_product_tenant')]
 
   @property
   def quantity_sold(self):
@@ -109,7 +120,7 @@ class Product(models.Model):
   def __str__(self):
     return self.name
 
-class Sale(models.Model):
+class Sale(TenantModel):
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_sales')
   product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sales')
   quantity = models.IntegerField(default=1)
@@ -117,9 +128,14 @@ class Sale(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
+  tenant_id = 'user_id'
+  objects = TenantManager()
+
   class Meta:
     verbose_name = "Venda"
     verbose_name_plural = "vendas"
+    ordering = ['-created_at']
+    constraints = [models.UniqueConstraint(fields=['id', 'user'], name='unique_sale_tenant')]
 
   def __str__(self):
     return self.product.name

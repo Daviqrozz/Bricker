@@ -7,9 +7,11 @@ from django.db.models import Sum, F
 from django.utils import timezone
 from datetime import timedelta
 from django.http import JsonResponse
+from django_multitenant.utils import set_current_tenant
 
 @login_required
 def product_view(request):
+  set_current_tenant(request.user)
 
   products = Product.objects.all()
 

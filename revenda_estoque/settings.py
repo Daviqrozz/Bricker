@@ -31,8 +31,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://*.pythonanywhere.com']
+CSRF_TRUSTED_ORIGINS = [
+  'https://*.pythonanywhere.com',
+  'http://127.0.0.1:8000',
+  'http://localhost:8000'
+]
 
+AUTHENTICATION_BACKENDS = [
+  'django.contrib.auth.backends.ModelBackend',
+]
 
 # Application definition
 
@@ -46,7 +53,8 @@ INSTALLED_APPS = [
   'api',
   'rest_framework',
   'corsheaders',
-  'django_user_agents'
+  'django_user_agents',
+  'django_multitenant'
 ]
 
 MIDDLEWARE = [
@@ -56,6 +64,7 @@ MIDDLEWARE = [
   'django.middleware.common.CommonMiddleware',
   'django.middleware.csrf.CsrfViewMiddleware',
   'django.contrib.auth.middleware.AuthenticationMiddleware',
+  'django_multitenant.middlewares.MultitenantMiddleware',
   'django.contrib.messages.middleware.MessageMiddleware',
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
   'django_user_agents.middleware.UserAgentMiddleware',
