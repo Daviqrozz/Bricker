@@ -60,7 +60,7 @@
           <ul class="navbar-nav ms-auto align-items-center">
             {% if user.is_authenticated %}
               {% if user_agent.is_pc %}
-                <li class="nav-item ">
+                <li class="nav-item">
                   <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#onBoardingModal">
                     <img src="{% static 'img/icons/help-circle.svg' %}" alt="help circle icon">
                   </button>
@@ -117,6 +117,15 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        {% if show_onboarding %}
+          var onboardingModal = new bootstrap.Modal(document.getElementById('onBoardingModal'));
+          onboardingModal.show();
+        {% endif %}
+      });
+    </script>
   </body>
 
   {% include 'partials/modals/onboarding.html' %}

@@ -3,10 +3,13 @@ Django==5.2.14
 django-cors-headers==4.9.0
 django-user-agents==0.4.0
 djangorestframework==3.17.1
+dotenv==0.9.9
 gunicorn==26.0.0
 mysqlclient==2.2.8
 packaging==26.2
+python-dotenv==1.2.2
 sqlparse==0.5.5
+tzdata==2026.2
 ua-parser==1.0.2
 ua-parser-builtins==202605
 user-agents==2.2.0

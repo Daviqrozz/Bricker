@@ -66,6 +66,7 @@ class Product(models.Model):
   class Meta:
     verbose_name = "Produto"
     verbose_name_plural = "Produtos"
+    ordering = ['-created_at']
 
   @property
   def quantity_sold(self):
