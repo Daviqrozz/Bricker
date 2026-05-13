@@ -3,115 +3,109 @@
 {% block title %}Editar Produto{% endblock %}
 
 {% block content %}
-  <form method="POST" action="{% url 'edit_view' product.id %}">
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{% url 'edit_view' product.id %}">
+<form method="POST" action="{% url 'edit_view' product.id %}">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{% url 'edit_view' product.id %}">
 
-    <div class="row justify-content-center">
-      <div class="col-lg-6 col-md-8">
-        <div class="card card-dark shadow-soft rounded-3 border-0">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="card card-dark shadow-soft rounded-3 border-0">
 
-          {% comment %} Title {% endcomment %}
-          <div class="card-header header-color border-bottom border-cor-borda pt-3 pb-2">
-            <h2 class="card-title text-center mb-0">
-              <i class="bi bi-box-seam me-2"></i> Editar Produto
-            </h2>
+        {% comment %} Title {% endcomment %}
+        <div class="card-header header-color border-bottom border-cor-borda pt-3 pb-2">
+          <h2 class="card-title text-center mb-0">
+            <i class="bi bi-box-seam me-2"></i> Editar Produto
+          </h2>
+        </div>
+
+        <div class="card-body p-4">
+
+          {% comment %} Errors {% endcomment %}
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            <strong>Erro no Formulário:</strong>
+            {{ form.non_field_errors }}
+          </div>
+          {% endif %}
+
+          {% comment %} Name {% endcomment %}
+          <label for="{{ form.name.id_for_label }}" class="text-secondary">Nome do Produto</label>
+          <div class="form-floating mb-3">
+            {{ form.name }}
+            <label for="{{ form.name.id_for_label }}" class="text-secondary">Nome do Produto</label>
+
+            {% if form.name.errors %}
+            <div class="text-danger small mt-1">{{ form.name.errors }}</div>
+            {% endif %}
           </div>
 
-          <div class="card-body p-4">
+          {% comment %} Category {% endcomment %}
+          <label for="{{ form.category.id_for_label }}" class="form-label text-secondary mb-1">Categoria</label>
+          <div class="mb-3 input-group">{{ form.category }}</div>
 
-            {% comment %} Errors {% endcomment %}
-            {% if form.non_field_errors %}
-              <div class="alert alert-danger" role="alert">
-                <strong>Erro no Formulário:</strong>
-                {{ form.non_field_errors }}
-              </div>
+          {% if form.category.errors %}
+          <div class="text-danger small mt-1 mb-3">{{ form.category.errors }}</div>
+          {% endif %}
+
+
+          {% comment %} Stock informations {% endcomment %}
+          <div class="alert alert-info mb-3">
+            <strong>Informações de Estoque:</strong><br>
+            Vendido: {{ product.quantity_sold }} unidades<br>
+            Em Estoque: {{ product.quantity_in_stock }} unidades
+          </div>
+
+          {% comment %} Unit cost {% endcomment %}
+          <label for="{{ form.cost.id_for_label }}" class="text-secondary">Custo (R$)</label>
+          <div class="form-floating mb-1">
+            {{ form.cost }}
+            <label for="{{ form.cost.id_for_label }}" class="text-secondary">Custo (R$)</label>
+
+            {% if form.cost.errors %}
+            <div class="text-danger small mt-1">{{ form.cost.errors }}</div>
             {% endif %}
+          </div>
+          <small style="color: #9CA3AF;" class="mb-3 d-block">Quanto você pagou pelo produto</small>
 
-            {% comment %} Name {% endcomment %}
-            <label for="{{ form.name.id_for_label }}" class="text-secondary">Nome do Produto</label>
-            <div class="form-floating mb-3">
-              {{ form.name }}
+          {% comment %} Selling price {% endcomment %}
+          <label for="{{ form.expected_sale_value.id_for_label }}" class="text-secondary">Preço de Venda Esperado (R$) -
+            Opcional</label>
+          <div class="form-floating mb-1">
+            {{ form.expected_sale_value }}
+            <label for="{{ form.expected_sale_value.id_for_label }}" class="text-secondary">Preço de Venda Esperado
+              (R$)</label>
 
-              {% if form.name.errors %}
-                <div class="text-danger small mt-1">{{ form.name.errors }}</div>
-              {% endif %}
-            </div>
-
-            {% comment %} Category {% endcomment %}
-            <label for="{{ form.category.id_for_label }}" class="form-label text-secondary mb-1">Categoria</label>
-            <div class="mb-3 input-group">{{ form.category }}</div>
-
-            {% if form.category.errors %}
-              <div class="text-danger small mt-1 mb-3">{{ form.category.errors }}</div>
+            {% if form.sale_value.errors %}
+            <div class="text-danger small mt-1">{{ form.expected_sale_value.errors }}</div>
             {% endif %}
+          </div>
+          <small style="color: #9CA3AF;" class="mb-3 d-block">Valor maximo que voce espera receber pelo produto</small>
 
-            {% comment %} Purchased quantity {% endcomment %}
-            <label for="{{ form.quantity_total.id_for_label }}" class="text-secondary">Quantidade Total Comprada</label>
-            <div class="form-floating mb-1">
-              {{ form.quantity_total }}
-              <label for="{{ form.quantity_total.id_for_label }}" class="text-secondary">Quantidade Total</label>
+          {% comment %} Observations {% endcomment %}
+          <label for="{{ form.observation.id_for_label }}" class="text-secondary">Observações (Opcional)</label>
+          <div class="form-floating mb-4">
+            {{ form.observation }}
 
-              {% if form.quantity_total.errors %}
-                <div class="text-danger small mt-1">{{ form.quantity_total.errors }}</div>
-              {% endif %}
-            </div>
-            <small style="color: #9CA3AF;" class="mb-3 d-block">Quantas unidades você comprou no total</small>
+            {% if form.observation.errors %}
+            <div class="text-danger small mt-1">{{ form.observation.errors }}</div>
+            {% endif %}
+          </div>
 
-            {% comment %} Stock informations {% endcomment %}
-            <div class="alert alert-info mb-3">
-              <strong>Informações de Estoque:</strong><br>
-              Vendido: {{ product.quantity_sold }} unidades<br>
-              Em Estoque: {{ product.quantity_in_stock }} unidades
-            </div>
+          {% comment %} Save {% endcomment %}
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+              <i class="bi bi-plus-circle-fill me-2"></i> Salvar Alterações
+            </button>
+          </div>
 
-            {% comment %} Unit cost {% endcomment %}
-            <label for="{{ form.cost.id_for_label }}" class="text-secondary">Custo Unitário (R$)</label>
-            <div class="form-floating mb-1">
-              {{ form.cost }}
-
-              {% if form.cost.errors %}
-                <div class="text-danger small mt-1">{{ form.cost.errors }}</div>
-              {% endif %}
-            </div>
-            <small style="color: #9CA3AF;" class="mb-3 d-block">Quanto você pagou por cada unidade</small>
-
-            {% comment %} Selling price {% endcomment %}
-            <label for="{{ form.sale_value.id_for_label }}" class="text-secondary">Preço de Venda Sugerido (R$) - Opcional</label>
-            <div class="form-floating mb-1">
-              {{ form.sale_value }}
-
-              {% if form.sale_value.errors %}
-                <div class="text-danger small mt-1">{{ form.sale_value.errors }}</div>
-              {% endif %}
-            </div>
-            <small style="color: #9CA3AF;" class="mb-3 d-block">Preço sugerido por unidade (pode variar nas vendas)</small>
-
-            {% comment %} Observations {% endcomment %}
-            <label for="{{ form.observation.id_for_label }}" class="text-secondary">Observações (Opcional)</label>
-            <div class="form-floating mb-4">
-              {{ form.observation }}
-
-              {% if form.observation.errors %}
-                <div class="text-danger small mt-1">{{ form.observation.errors }}</div>
-              {% endif %}
-            </div>
-
-            {% comment %} Save {% endcomment %}
-            <div class="d-grid gap-2 mt-4">
-              <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-                <i class="bi bi-plus-circle-fill me-2"></i> Salvar Alterações
-              </button>
-            </div>
-
-            <div class="d-grid gap-2 mt-4 w-100">
-              <a href="{% url 'products_view' %}">
-                <button type="button" class="btn btn-danger btn-lg shadow-sm w-100"> Cancelar </button>
-              </a>
-            </div>
+          <div class="d-grid gap-2 mt-4 w-100">
+            <a href="{% url 'products_view' %}">
+              <button type="button" class="btn btn-danger btn-lg shadow-sm w-100"> Cancelar </button>
+            </a>
           </div>
         </div>
       </div>
     </div>
-  </form>
+  </div>
+</form>
 {% endblock %}

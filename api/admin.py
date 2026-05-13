@@ -21,7 +21,6 @@ admin.site.register(Sale)
 # 2. Registro com Personalização (para o Produto)
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    # O Admin usará estas configurações:
-    list_display = ('name', 'quantity_total', 'quantity_sold', 'quantity_in_stock', 'sale_value', 'total_profit')
-    list_filter = ('category', 'sale_value')
+    list_display = ('name', 'category', 'status', 'cost', 'expected_sale_value', 'profit')
+    list_filter = ('category', 'status')
     search_fields = ('name', 'observation')

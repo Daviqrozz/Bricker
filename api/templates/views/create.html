@@ -49,41 +49,29 @@
               {% endif %}
             </div>
 
-            {% comment %} Purchased quantity {% endcomment %}
-            <label for="{{ form.quantity_total.id_for_label }}" class="text-secondary">Quantidade Total Comprada</label>
-            <div class="form-floating mb-1">
-              {{ form.quantity_total }}
-              <label for="{{ form.quantity_total.id_for_label }}" class="text-secondary">Quantidade Total</label>
-
-              {% if form.quantity_total.errors %}
-                <div class="text-danger small mt-1">{{ form.quantity_total.errors }}</div>
-              {% endif %}
-            </div>
-            <small style="color: #9CA3AF;" class="mb-3 d-block">Quantas unidades você comprou no total</small>
-
-            {% comment %} Unit cost {% endcomment %}
-            <label for="{{ form.cost.id_for_label }}" class="text-secondary">Custo Unitário (R$)</label>
+            {% comment %} Cost {% endcomment %}
+            <label for="{{ form.cost.id_for_label }}" class="text-secondary">Custo (R$)</label>
             <div class="form-floating mb-1">
               {{ form.cost }}
-              <label for="{{ form.cost.id_for_label }}" class="text-secondary">Custo Unitário (R$)</label>
+              <label for="{{ form.cost.id_for_label }}" class="text-secondary">Custo (R$)</label>
 
               {% if form.cost.errors %}
                 <div class="text-danger small mt-1">{{ form.cost.errors }}</div>
               {% endif %}
             </div>
-            <small style="color: #9CA3AF;" class="mb-3 d-block">Quanto você pagou por cada unidade</small>
+            <small style="color: #9CA3AF;" class="mb-3 d-block">Quanto você pagou pelo produto</small>
 
             {% comment %} Selling price {% endcomment %}
-            <label for="{{ form.sale_value.id_for_label }}" class="text-secondary">Preço de Venda Sugerido (R$) - Opcional</label>
+            <label for="{{ form.expected_sale_value.id_for_label }}" class="text-secondary">Preço de Venda Esperado (R$) - Opcional</label>
             <div class="form-floating mb-1">
-              {{ form.sale_value }}
-              <label for="{{ form.sale_value.id_for_label }}" class="text-secondary">Preço de Venda (R$)</label>
+              {{ form.expected_sale_value }}
+              <label for="{{ form.expected_sale_value.id_for_label }}" class="text-secondary">Preço de Venda Esperado (R$)</label>
 
               {% if form.sale_value.errors %}
-                <div class="text-danger small mt-1">{{ form.sale_value.errors }}</div>
+                <div class="text-danger small mt-1">{{ form.expected_sale_value.errors }}</div>
               {% endif %}
             </div>
-            <small style="color: #9CA3AF;" class="mb-3 d-block">Preço sugerido por unidade (pode variar nas vendas)</small>
+            <small style="color: #9CA3AF;" class="mb-3 d-block">Valor maximo que voce espera receber pelo produto</small>
 
             {% comment %} Observations {% endcomment %}
             <label for="{{ form.observation.id_for_label }}" class="text-secondary">Observações (Opcional)</label>
