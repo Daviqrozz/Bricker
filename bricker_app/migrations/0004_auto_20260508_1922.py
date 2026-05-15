@@ -1,7 +1,7 @@
 from django.db import migrations
 
 def create_default_plan(apps, schema_editor):
-  Plan = apps.get_model('api', 'Plan')
+  Plan = apps.get_model('bricker_app', 'Plan')
   Plan.objects.get_or_create(
     name='Plano Free',
     defaults={
@@ -12,9 +12,9 @@ def create_default_plan(apps, schema_editor):
   )
 
 def remove_default_plan(apps, schema_editor):
-  Plan = apps.get_model('api', 'Plan')
+  Plan = apps.get_model('bricker_app', 'Plan')
   Plan.objects.filter(name='Plano Free').delete()
 
 class Migration(migrations.Migration):
-  dependencies = [('api', '0003_alter_userprofile_plan')]
+  dependencies = [('bricker_app', '0003_alter_userprofile_plan')]
   operations = [migrations.RunPython(create_default_plan, remove_default_plan)]

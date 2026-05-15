@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0006_alter_product_options_alter_sale_options_and_more'),
+        ('bricker_app', '0006_alter_product_options_alter_sale_options_and_more'),
     ]
 
     operations = [
@@ -45,6 +45,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sale',
             name='product',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='sale', to='api.product'),
+            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='sale', to='bricker_app.product'),
         ),
     ]

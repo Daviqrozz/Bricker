@@ -1,10 +1,5 @@
 feats:
--Adicionar verificação:se valor de venda !null ou > 0, alterar status para Vendido
--Adicionar filtros por nome e data/lucro
--Alert ou modal  de confirmação ao clicar em deletar
--Adicionar mini dashboard de historico mensal
--Adicionar imagens 
+-Adicionar botao de venda rapida
 
 fix:
--Consertar tamanho dos inputs dos formularios
--View de deletar categoria
+- Botao de logout

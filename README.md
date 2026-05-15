@@ -5,7 +5,7 @@ O Revenda Estoque é um Sistema de Gestão de Estoque minimalista e eficiente, d
 
 Inicialmente, fiz esse sistema para me auxiliar no registro e controle dos produtos que adquiro e faço revenda. O principal objetivo é fornecer uma solução rápida para controle de inventário.
 
-O sistema está sujeito a futuras atualizações e refatorações, visando a expansão para múltiplos usuários e a possibilidade de se tornar uma base de API para consumo por outras aplicações.
+O sistema está sujeito a futuras atualizações e refatorações, visando a expansão para múltiplos usuários e a possibilidade de se tornar uma base de bricker_app para consumo por outras aplicações.
 
 ---
 

@@ -100,7 +100,8 @@ def product_view(request):
                 show_onboarding = True
                 request.session['onboarding_viewed'] = True
 
-    onboarding_completed = request.user.profile.onboarding_completed_at is not None
+    profile = getattr(request.user, "profile", None)
+    onboarding_completed = bool(profile and profile.onboarding_completed_at)
 
     context = {
         'products_list': products,

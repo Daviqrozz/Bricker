@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0001_initial'),
+        ('bricker_app', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                 ('onboarding_completed_at', models.DateTimeField(blank=True, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('plan', models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, related_name='profiles', to='api.plan')),
+                ('plan', models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, related_name='profiles', to='bricker_app.plan')),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL)),
             ],
             options={

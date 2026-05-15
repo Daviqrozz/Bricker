@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0002_plan_alter_category_options_alter_product_options_and_more'),
+        ('bricker_app', '0002_plan_alter_category_options_alter_product_options_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='userprofile',
             name='plan',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='profiles', to='api.plan'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='profiles', to='bricker_app.plan'),
         ),
     ]

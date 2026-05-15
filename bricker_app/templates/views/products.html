@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Lista de Estoque{% endblock %}
+
+{% block content %}
+  {% include 'partials/dashboard/cards.html' %}
+  <h3 class="text-center mb-4">Produtos</h3>
+
+  {% include 'partials/products/product_table.html' %}
+
+  {% block scripts %}
+    <script src="{% static 'js/toggleView.js' %}"></script>
+  {% endblock %}
+{% endblock %}

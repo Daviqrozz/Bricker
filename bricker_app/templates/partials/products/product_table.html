@@ -1,44 +1,3 @@
-{% extends "base.html" %}
-
-{% block title %}Lista de Estoque{% endblock %}
-
-{% block content %}
-<h3 class="text-center mb-4">Produtos</h3>
-
-<div class="row g-4 mb-4">
-  <!-- Balance Card -->
-  <div class="col-md-4">
-    <div
-      class="card-dark shadow-soft p-4 d-flex flex-column align-items-center justify-content-center h-100 text-center">
-      <h5 class="text-secondary mb-2 fw-bold">Lucro ({{ period_label }})</h5>
-      <h2 class="fw-bold mb-0 {% if last_month_balance >= 0 %}text-success{% else %}text-danger{% endif %}">
-        R$ {{ last_month_balance|floatformat:2 }}
-      </h2>
-      <small style="color: white;" class="mt-2">Lucro realizado</small>
-    </div>
-  </div>
-
-  <!-- Total Spent Card -->
-  <div class="col-md-4">
-    <div
-      class="card-dark shadow-soft p-4 d-flex flex-column align-items-center justify-content-center h-100 text-center">
-      <h5 class="text-secondary mb-2 fw-bold">Investimento Total</h5>
-      <h2 class="fw-bold mb-0 text-info">R$ {{ total_spent|floatformat:2 }}</h2>
-      <small style="color: white;" class="mt-2">Soma de compras ({{ period_label }})</small>
-    </div>
-  </div>
-
-  <!-- Gross Income Card -->
-  <div class="col-md-4">
-    <div
-      class="card-dark shadow-soft p-4 d-flex flex-column align-items-center justify-content-center h-100 text-center">
-      <h5 class="text-secondary mb-2 fw-bold">Renda Bruta</h5>
-      <h2 class="fw-bold mb-0 text-warning">R$ {{ gross_income|floatformat:2 }}</h2>
-      <small style="color: white;" class="mt-2">Total (Lucro + Investido)</small>
-    </div>
-  </div>
-</div>
-
 <div class="card-dark shadow-soft p-3">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <a href="{% url 'create_view' %}" class="btn btn-success">
@@ -118,12 +77,16 @@
           <td>R$ {{product.cost|floatformat:2}}</td>
           <td>R$ {{product.expected_sale_value|floatformat:2}}</td>
           <td>
-    {% if product.is_available %}
-        <span>—</span>
-    {% else %}
-        R$ {{ product.sale.profit|floatformat:2 }}
-    {% endif %}
-</td>
+              {% if product.is_available or not product.sale %}
+                  <span class="text-warning">—</span>
+              {% else %}
+                  {% if product.sale.profit > 0 %}
+                      <span class="text-success">R$ {{ product.sale.price_sold }}</span>
+                  {% else %}
+                      <span class="text-danger">R$ {{ product.sale.price_sold }}</span>
+                  {% endif %}
+              {% endif %}
+        </td>
           <td>
             <div class="d-flex justify-content-center gap-1">
               {% if not product.is_sold_out %}
@@ -334,99 +297,3 @@
   </nav>
   {% endif %}
 </div>
-
-<script>
-  // View Toggle Functionality
-  document.addEventListener('DOMContentLoaded', function () {
-    const tableView = document.getElementById('table-view');
-    const cardsView = document.getElementById('cards-view');
-    const tableBtn = document.getElementById('view-table-btn');
-    const cardsBtn = document.getElementById('view-cards-btn');
-    const perPageSelect = document.getElementById('per-page-select');
-
-    // Handle per-page selector change
-    if (perPageSelect) {
-      perPageSelect.addEventListener('change', function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('per_page', this.value);
-        urlParams.set('page', '1'); // Reset to first page when changing per_page
-        window.location.search = urlParams.toString();
-      });
-    }
-
-    // Handle period selector change
-    const periodSelect = document.getElementById('period-select');
-    if (periodSelect) {
-      periodSelect.addEventListener('change', function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        urlParams.set('period', this.value);
-        window.location.search = urlParams.toString();
-      });
-    }
-
-    // Check if we're on mobile
-    const isMobile = window.innerWidth < 768;
-
-    if (!isMobile) {
-      // Desktop: Handle toggle
-      const savedView = localStorage.getItem('productView') || 'table';
-
-      function showTableView() {
-        tableView.style.display = 'block';
-        cardsView.style.display = 'none';
-        tableBtn.classList.add('active');
-        cardsBtn.classList.remove('active');
-        localStorage.setItem('productView', 'table');
-      }
-
-      function showCardsView() {
-        tableView.style.display = 'none';
-        cardsView.style.display = 'block';
-        tableBtn.classList.remove('active');
-        cardsBtn.classList.add('active');
-        localStorage.setItem('productView', 'cards');
-      }
-
-      // Set initial view
-      if (savedView === 'cards') {
-        showCardsView();
-      } else {
-        showTableView();
-      }
-
-      // Button click handlers
-      tableBtn.addEventListener('click', showTableView);
-      cardsBtn.addEventListener('click', showCardsView);
-    } else {
-      // Mobile: Always show cards
-      tableView.style.display = 'none';
-      cardsView.style.display = 'block';
-    }
-
-    // Handle window resize
-    window.addEventListener('resize', function () {
-      const nowMobile = window.innerWidth < 768;
-
-      if (nowMobile) {
-        tableView.style.display = 'none';
-        cardsView.style.display = 'block';
-      } else {
-        // Restore saved preference on desktop
-        const savedView = localStorage.getItem('productView') || 'table';
-
-        if (savedView === 'cards') {
-          tableView.style.display = 'none';
-          cardsView.style.display = 'block';
-          cardsBtn.classList.add('active');
-          tableBtn.classList.remove('active');
-        } else {
-          tableView.style.display = 'block';
-          cardsView.style.display = 'none';
-          tableBtn.classList.add('active');
-          cardsBtn.classList.remove('active');
-        }
-      }
-    });
-  });
-</script>
-{% endblock %}

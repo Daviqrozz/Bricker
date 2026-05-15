@@ -22,7 +22,7 @@ docker-compose.override.yml
 .docker/
 /docker/mysql/
 
-# Created by https://www.toptal.com/developers/gitignore/api/django,python
+# Created by https://www.toptal.com/developers/gitignore/bricker_app/django,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,python
 
 ### Django ###
@@ -287,4 +287,4 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-# End of https://www.toptal.com/developers/gitignore/api/django,python
+# End of https://www.toptal.com/developers/gitignore/bricker_app/django,python

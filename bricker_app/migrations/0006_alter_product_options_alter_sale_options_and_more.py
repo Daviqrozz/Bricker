@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0005_auto_20260511_2236'),
+        ('bricker_app', '0005_auto_20260511_2236'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

@@ -1,5 +1,5 @@
 """
-ASGI config for revenda_estoque project.
+ASGI config for bricker project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'revenda_estoque.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bricker.settings')
 
 application = get_asgi_application()

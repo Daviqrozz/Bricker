@@ -1,0 +1,33 @@
+<div class="row g-4 mb-4">
+  <!-- Balance Card -->
+  <div class="col-md-4">
+    <div
+      class="card-dark shadow-soft p-4 d-flex flex-column align-items-center justify-content-center h-100 text-center">
+      <h5 class="text-secondary mb-2 fw-bold">Lucro ({{ period_label }})</h5>
+      <h2 class="fw-bold mb-0 {% if last_month_balance >= 0 %}text-success{% else %}text-danger{% endif %}">
+        R$ {{ last_month_balance|floatformat:2 }}
+      </h2>
+      <small style="color: white;" class="mt-2">Lucro realizado</small>
+    </div>
+  </div>
+
+  <!-- Total Spent Card -->
+  <div class="col-md-4">
+    <div
+      class="card-dark shadow-soft p-4 d-flex flex-column align-items-center justify-content-center h-100 text-center">
+      <h5 class="text-secondary mb-2 fw-bold">Investimento Total</h5>
+      <h2 class="fw-bold mb-0 text-info">R$ {{ total_spent|floatformat:2 }}</h2>
+      <small style="color: white;" class="mt-2">Soma de compras ({{ period_label }})</small>
+    </div>
+  </div>
+
+  <!-- Gross Income Card -->
+  <div class="col-md-4">
+    <div
+      class="card-dark shadow-soft p-4 d-flex flex-column align-items-center justify-content-center h-100 text-center">
+      <h5 class="text-secondary mb-2 fw-bold">Renda Bruta</h5>
+      <h2 class="fw-bold mb-0 text-warning">R$ {{ gross_income|floatformat:2 }}</h2>
+      <small style="color: white;" class="mt-2">Total (Lucro + Investido)</small>
+    </div>
+  </div>
+</div>
