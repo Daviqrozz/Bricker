@@ -1,0 +1,35 @@
+<div class="d-flex gap-2 align-items-center">
+      <!-- Products Per Page Selector -->
+      <div class="d-flex align-items-center">
+        <label for="per-page-select" class="text-secondary mb-0 small">Quantidade:</label>
+        <select id="per-page-select" class="form-select form-select-sm" style="width: auto;">
+          <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+          <option value="25" {% if per_page == 25 %}selected{% endif %}>25</option>
+          <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+          <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+        </select>
+      </div>
+
+      <!-- Date Period Selector -->
+      <div class="d-flex align-items-center gap-2">
+        <label for="period-select" class="text-secondary mb-0 small">Período:</label>
+        <select id="period-select" class="form-select form-select-sm" style="width: auto;">
+          <option value="30" {% if period == '30' %}selected{% endif %}>30 dias</option>
+          <option value="90" {% if period == '90' %}selected{% endif %}>3 meses</option>
+          <option value="180" {% if period == '180' %}selected{% endif %}>6 meses</option>
+          <option value="365" {% if period == '365' %}selected{% endif %}>1 ano</option>
+          <option value="all" {% if period == 'all' %}selected{% endif %}>Tudo</option>
+        </select>
+      </div>
+
+      <!-- View Toggle Buttons (Desktop Only) -->
+      <div class="btn-group d-none d-md-flex" role="group" aria-label="View toggle">
+        <button type="button" class="btn btn-outline-secondary" id="view-table-btn">
+          <i class="bi bi-table"></i> Tabela
+        </button>
+
+        <button type="button" class="btn btn-outline-secondary" id="view-cards-btn">
+          <i class="bi bi-grid-3x3-gap"></i> Cards
+        </button>
+      </div>
+    </div>

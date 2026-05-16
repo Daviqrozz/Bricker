@@ -171,7 +171,6 @@ def delete_view(request, id):
 
     return redirect('products_view')
 
-
 @login_required
 def sell_product_view(request, id):
     product = get_object_or_404(
@@ -181,8 +180,15 @@ def sell_product_view(request, id):
         status=Product.Status.AVAILABLE
     )
 
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
     if request.method == 'POST':
-        form = SaleForm(request.POST, user=request.user)
+        post_data = request.POST.copy()
+
+        if not post_data.get('price_sold'):
+            post_data['price_sold'] = product.expected_sale_value
+
+        form = SaleForm(post_data, user=request.user)
 
         if form.is_valid():
             sale = form.save(commit=False)
@@ -193,19 +199,33 @@ def sell_product_view(request, id):
             product.status = Product.Status.SOLD
             product.save(update_fields=['status', 'updated_at'])
 
-            return redirect('products_view')
-    else:
-        form = SaleForm(initial={
-            'product': product,
-            'price_sold': product.expected_sale_value,
-        }, user=request.user)
+            if is_ajax:
+                return JsonResponse({
+                    'success': True,
+                    'product_id': product.id,
+                    'message': f'{product.name} vendido com sucesso.'
+                })
 
-    context = {
+            return redirect('products_view')
+
+        if is_ajax:
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors.get_json_data(),
+            }, status=400)
+
+    else:
+        form = SaleForm(
+            initial={
+                'price_sold': product.expected_sale_value,
+            },
+            user=request.user
+        )
+
+    return render(request, 'views/sell.html', {
         'form': form,
         'product': product,
-    }
-
-    return render(request, 'views/sell.html', context)
+    })
 
 
 @login_required

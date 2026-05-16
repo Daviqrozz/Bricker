@@ -18,21 +18,20 @@ class ProductForm(forms.ModelForm):
             'observation': forms.Textarea(attrs={'class': INPUT_CLASSES, 'placeholder': 'Observações', 'rows': 3}),
         }
 
-
 class SaleForm(forms.ModelForm):
     class Meta:
         model = Sale
-        fields = ['product', 'price_sold']
+        fields = ['price_sold']
         widgets = {
-            'product': forms.Select(attrs={'class': SELECT_CLASSES, 'required': True}),
-            'price_sold': forms.NumberInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'Valor de Venda (R$)', 'min': 0, 'step': '0.01'}),
+            'price_sold': forms.NumberInput(attrs={
+                'class': INPUT_CLASSES,
+                'placeholder': 'Valor de Venda (R$)',
+                'min': 0,
+                'step': '0.01'
+            }),
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if user:
-            self.fields['product'].queryset = Product.objects.filter(
-                user=user,
-                status=Product.Status.AVAILABLE
-            )
+        self.fields['price_sold'].required = False
