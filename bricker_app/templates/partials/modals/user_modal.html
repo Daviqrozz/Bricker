@@ -1,0 +1,63 @@
+{% load static %}
+
+{% if user.is_authenticated %}
+<div class="modal fade" id="userProfileModal" tabindex="-1" aria-labelledby="userProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 rounded-3 shadow" style="background: #1E2533;">
+      <div class="modal-header border-0 pb-0">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <div class="modal-body text-center px-4 pt-2 pb-4">
+
+        <!-- Avatar -->
+        <div
+          class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
+          style="width: 72px; height: 72px; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.15);"
+        >
+          <i class="bi bi-person-fill" style="font-size: 2rem; color: #9CA3AF;"></i>
+        </div>
+
+        <!-- Nome e email -->
+        <h5 class="text-white fw-semibold mb-1">{{ user.get_full_name|default:user.username }}</h5>
+        <p class="text-secondary small mb-0">{{ user.email|default:"—" }}</p>
+
+        <hr style="border-color: rgba(255,255,255,0.08); margin: 1.25rem 0;">
+
+        <!-- Infos -->
+        <div class="text-start mb-4">
+          <div class="d-flex justify-content-between mb-2">
+            <small class="text-secondary">Usuário</small>
+            <small class="text-white fw-medium">{{ user.username }}</small>
+          </div>
+
+          <div class="d-flex justify-content-between mb-2">
+            <small class="text-secondary">Plano</small>
+            <small class="text-white fw-medium">
+              {% if user.profile.plan %}
+                {{ user.profile.plan.name }}
+              {% else %}
+                —
+              {% endif %}
+            </small>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <small class="text-secondary">Membro desde</small>
+            <small class="text-white fw-medium">{{ user.date_joined|date:"d/m/Y" }}</small>
+          </div>
+        </div>
+
+        <!-- Logout -->
+        <form action="{% url 'logout' %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger w-100 rounded-pill fw-semibold">
+            <i class="bi bi-box-arrow-right me-2"></i> Sair
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

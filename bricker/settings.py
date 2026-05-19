@@ -31,10 +31,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 CSRF_TRUSTED_ORIGINS = [
   'https://*.pythonanywhere.com',
   'http://127.0.0.1:8000',
-  'http://localhost:8000'
+  'http://localhost:8000',
+   'http://0.0.0.0:8000',
+  'https://*.ngrok-free.app',
 ]
 
 AUTHENTICATION_BACKENDS = [
